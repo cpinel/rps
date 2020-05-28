@@ -1,0 +1,922 @@
+<ShipmentInstructionMessage xmlns="http://esb.dsv.com/CDM/ShipmentInstructionMessage_V2">
+  <Header>
+    <MessageId>XUS_SDSV0091630_1</MessageId>
+    <TimeStamp>2020-05-11T13:52:37</TimeStamp>
+    <Source>
+      <Identifier>DFD/DK1/DQA/EDT</Identifier>
+      <EnterpriseCode>DSV</EnterpriseCode>
+      <Division>Air</Division>
+      <CountryCode>DK</CountryCode>
+      <CompanyCode>DK1</CompanyCode>
+      <ApplicationCode>EdiEnterprise</ApplicationCode>
+    </Source>
+    <Target>
+      <EnterpriseCode>DSV</EnterpriseCode>
+      <ApplicationCode>ODS</ApplicationCode>
+    </Target>
+    <User>
+      <Name>Anna Hut</Name>
+      <Email>anna.hut@dsv.com</Email>
+      <Login>anna.hut</Login>
+    </User>
+    <FunctionalDomain>Operations</FunctionalDomain>
+    <ESBDomain>OD2</ESBDomain>
+    <MessageType>CDM_ShipmentInstruction</MessageType>
+    <Version>2.0</Version>
+    <Function>New</Function>
+    <Test>true</Test>
+  </Header>
+  <ShipmentInstruction>
+    <ShipmentDetails>
+      <ShipmentId>SDSV0091630</ShipmentId>
+      <ShipmentReferences>
+        <Reference Type="ShipmentId" Assignor="FreightForwarder">SDSV0091630</Reference>
+        <Reference Type="ShipmentId" Assignor="Consignor">40257145950042300308</Reference>
+        <Reference Type="ShipmentId" Assignor="Consignee">122312 122043 IN0510260</Reference>
+        <Reference Type="ShipmentId" Assignor="Originator">40257145950042300308</Reference>
+        <Reference Type="ExternalReference">40257145950042300308</Reference>
+        <Reference Type="EventBranch">HOR</Reference>
+        <Reference Type="ExternalSystem">eBooking</Reference>
+        <Reference Type="HouseBill">DSV0091630</Reference>
+        <Reference Type="InterimReceiptNo">AFWBK-84339</Reference>
+        <Reference Type="BookingReference">40257145950042300308</Reference>
+        <Reference Type="CoLoadType">STD</Reference>
+        <Reference Type="ServiceLevel">CLA</Reference>
+        <Reference Type="ShippedOnBoardType">SHP</Reference>
+        <Reference Type="ScreeningStatus">NOT</Reference>
+        <Reference Type="InspectionType">UNK</Reference>
+        <Reference Type="AviationSecurity">UNK</Reference>
+        <Reference Type="IsCancelled">false</Reference>
+        <Reference Type="IsForwardRegistered">true</Reference>
+        <Reference Type="JobLocalReference">28813724</Reference>
+        <Reference Type="InvoiceStatus">WRK</Reference>
+        <Reference Type="CustomsEntryType">MRN</Reference>
+        <Reference Type="CustomsEntryDescription">Movement Reference Number</Reference>
+        <Reference Type="CustomsEntryNumber" Identifier="MRN">20DK00790022F589D3</Reference>
+        <Reference Type="OrderReference">122312</Reference>
+        <Reference Type="OrderReference">122043</Reference>
+        <Reference Type="OrderReference">IN0510260</Reference>
+        <Reference Type="BRN" PassThrough="true">BRY</Reference>
+        <Reference Type="DPT" PassThrough="true">FEA</Reference>
+        <Reference Type="ESN" Identifier="CargoLink" PassThrough="true" Timestamp="2020-05-11T13:34:00">AFWBK-84339</Reference>
+        <Reference Type="MRN" PassThrough="true">20DK00790022F589D3</Reference>
+        <Reference Type="OAG" PassThrough="true">SDSV0091630</Reference>
+        <Reference Type="SID" PassThrough="true">eBooking</Reference>
+        <Reference Type="SSN" PassThrough="true">40257145950042300308</Reference>
+        <Reference Type="STP" PassThrough="true">DSV</Reference>
+        <Reference Type="Airline Turnover (DK)" CustomField="true" CustomFieldType="DateTime">2020-03-20T00:00:00</Reference>
+        <Reference Type="BookedBy" CustomField="true" CustomFieldType="String">Karin Sonne (karin.sonne@wsa.com)</Reference>
+        <Reference Type="Booking Party" CustomField="true" CustomFieldType="String">WIDEX A/S - 6402106337</Reference>
+        <Reference Type="CargoLinkDepartment" CustomField="true" CustomFieldType="String">AFWBK</Reference>
+        <Reference Type="PickUpDateTimeFrom" CustomField="true" CustomFieldType="DateTime">2020-03-19T13:18:00</Reference>
+        <Reference Type="Contract Rate" CustomField="true" CustomFieldType="Boolean">false</Reference>
+        <Reference Type="LoadMeters" CustomField="true" CustomFieldType="Decimal">0</Reference>
+        <Reference Type="Pallets" CustomField="true" CustomFieldType="Integer">0</Reference>
+        <Reference Type="Paper Invoice Only" CustomField="true" CustomFieldType="Boolean">false</Reference>
+        <Reference Type="ProcessDirection">Export</Reference>
+      </ShipmentReferences>
+      <ShipmentType>ForwardingInstruction</ShipmentType>
+      <HubCode>HOR</HubCode>
+      <DepartmentCode>BRN</DepartmentCode>
+      <Operator>
+        <Code>UTO</Code>
+        <Name>Anna Hut</Name>
+        <Department>BRN</Department>
+      </Operator>
+      <SalesContact>
+        <Code>SED</Code>
+        <Name>Susanne Rohde Edvardsen</Name>
+        <Department>BRN</Department>
+      </SalesContact>
+      <CreationDateTime>2020-05-11T11:33:00</CreationDateTime>
+      <Dates>
+        <Date Type="Collection">
+          <Option>BETWEEN</Option>
+          <DateTime>2020-03-19T14:00:00</DateTime>
+          <DateTime2>2020-03-19T15:00:00</DateTime2>
+        </Date>
+        <Date Type="EstimatedCollection">
+          <Option>ON</Option>
+          <DateTime>2020-03-19T14:00:00</DateTime>
+        </Date>
+        <Date Type="RequestedCollection">
+          <Option>ON</Option>
+          <DateTime>2020-03-19T15:00:00</DateTime>
+        </Date>
+        <Date Type="ScheduledCollection">
+          <Option>ON</Option>
+          <DateTime>2020-03-19T13:18:00</DateTime>
+        </Date>
+        <Date Type="ActualCollection">
+          <Option>ON</Option>
+          <DateTime>2020-03-19T13:18:00</DateTime>
+        </Date>
+        <Date Type="Receipt">
+          <Option>ON</Option>
+          <DateTime>2020-05-11T13:35:00</DateTime>
+        </Date>
+        <Date Type="Booked">
+          <DateTime>2020-03-19T13:11:00</DateTime>
+        </Date>
+        <Date Type="HouseBillIssued">
+          <Option>ON</Option>
+          <DateTime>2020-03-20T00:00:00</DateTime>
+        </Date>
+        <Date Type="LastEdited">
+          <Option>ON</Option>
+          <DateTime>2020-05-11T11:52:00</DateTime>
+        </Date>
+        <Date Type="JobOpened">
+          <Option>ON</Option>
+          <DateTime>2020-05-11T13:32:00</DateTime>
+        </Date>
+        <Date Type="JobRecognitionDate">
+          <Option>ON</Option>
+          <DateTime>2020-03-21T00:00:00</DateTime>
+        </Date>
+      </Dates>
+      <Parties>
+        <Party Role="FF">
+          <Id>9999908</Id>
+          <Address>
+            <Name>DSV Air &amp; Sea A/S (DK1)</Name>
+            <Line1>Hovedgaden 630</Line1>
+            <Line2></Line2>
+            <Postcode>2640</Postcode>
+            <City>Hedehusene</City>
+            <CountryCode>DK</CountryCode>
+          </Address>
+        </Party>
+        <Party Role="CZ">
+          <Id>6402106337</Id>
+          <Address>
+            <Name>WIDEX A/S</Name>
+            <Line1>NYMOELLEVEJ 6 LYNGE</Line1>
+            <Line2>DENMARK</Line2>
+            <Postcode>3540</Postcode>
+            <City>COPENHAGEN</City>
+            <State>DENMARK</State>
+            <CountryCode>DK</CountryCode>
+            <Country>Denmark</Country>
+            <UNLOCODE>DKCPH</UNLOCODE>
+          </Address>
+          <Contact>
+            <Name>Pre-alert NRT</Name>
+          </Contact>
+          <References>
+            <Reference Type="VAT" PassThrough="true" Identifier="VAT">15771100</Reference>
+            <Reference Type="GCR" Identifier="DK" PassThrough="true">15771100</Reference>
+            <Reference Type="CBR" Identifier="DK" PassThrough="true">17999109</Reference>
+            <Reference Type="CBS" Identifier="DK" PassThrough="true">15771100</Reference>
+            <Reference Type="AddressShortCode">NYMOELLEVEJ 6 LYNGE</Reference>
+            <Reference Type="AddressOverride">false</Reference>
+          </References>
+        </Party>
+        <Party Role="PW">
+          <Id>6402106337</Id>
+          <Address>
+            <Name>WIDEX A/S</Name>
+            <Line1>NYM˜LLEVEJ 6</Line1>
+            <Postcode>3540</Postcode>
+            <City>LYNGE</City>
+            <CountryCode>DK</CountryCode>
+            <Country>Denmark</Country>
+            <UNLOCODE>DKLNE</UNLOCODE>
+          </Address>
+          <Contact>
+            <Name>Pre-alert NRT</Name>
+            <Phone>+4544355600</Phone>
+            <Fax>+4544484122</Fax>
+            <Email>accounting@widex.dk</Email>
+          </Contact>
+          <References>
+            <Reference Type="VAT" PassThrough="true" Identifier="VAT">15771100</Reference>
+            <Reference Type="GCR" Identifier="DK" PassThrough="true">15771100</Reference>
+            <Reference Type="CBR" Identifier="DK" PassThrough="true">17999109</Reference>
+            <Reference Type="CBS" Identifier="DK" PassThrough="true">15771100</Reference>
+            <Reference Type="AddressShortCode">[1] NYMÃ˜LLEVEJ 6</Reference>
+            <Reference Type="AddressOverride">false</Reference>
+          </References>
+        </Party>
+        <Party Role="CN">
+          <Id>68022493</Id>
+          <Address>
+            <Name>SOLUCIONES AUDITIVAS BOLIVIA SRL</Name>
+            <Line1>CALLE MAYOR ROCHA NO 0132 (ESTE)</Line1>
+            <Line2>ENTRE AV. AYACUCHO Y CALLE BAPTISTA</Line2>
+            <City>COCHABAMBA</City>
+            <CountryCode>BO</CountryCode>
+            <Country>Bolivia</Country>
+            <UNLOCODE>BOLPB</UNLOCODE>
+          </Address>
+          <Contact>
+            <Name>Reception</Name>
+            <Email>marcelocuadros@solucionesauditivasbolivia.com</Email>
+          </Contact>
+          <References>
+            <Reference Type="AddressShortCode">CALLE MAYOR ROCHA NO 0132</Reference>
+            <Reference Type="AddressOverride">false</Reference>
+          </References>
+        </Party>
+        <Party Role="DP">
+          <Id>68022493</Id>
+          <Address>
+            <Name>SOLUCIONES AUDITIVAS BOLIVIA SRL</Name>
+            <Line1>CALLE MAYOR ROCHA NO 0132 (ESTE)</Line1>
+            <Line2>ENTRE AV. AYACUCHO Y CALLE BAPTISTA</Line2>
+            <City>COCHABAMBA</City>
+            <CountryCode>BO</CountryCode>
+            <Country>Bolivia</Country>
+            <UNLOCODE>BOLPB</UNLOCODE>
+          </Address>
+          <Contact>
+            <Name>Reception</Name>
+            <Email>marcelocuadros@solucionesauditivasbolivia.com</Email>
+          </Contact>
+          <References>
+            <Reference Type="AddressShortCode">CALLE MAYOR ROCHA NO 0132</Reference>
+            <Reference Type="AddressOverride">false</Reference>
+          </References>
+        </Party>
+        <Party Role="CC">
+          <Id>6402106337</Id>
+          <Address>
+            <Name>WIDEX A/S</Name>
+            <Line1>NYMÃ˜LLEVEJ 6</Line1>
+            <Postcode>3540</Postcode>
+            <City>LYNGE</City>
+            <CountryCode>DK</CountryCode>
+            <Country>Denmark</Country>
+            <UNLOCODE>DKLNE</UNLOCODE>
+          </Address>
+          <Contact>
+            <Name>Reception</Name>
+            <Phone>+4544355600</Phone>
+            <Fax>+4544484122</Fax>
+            <Email>accounting@widex.dk</Email>
+          </Contact>
+          <References>
+            <Reference Type="VAT" PassThrough="true" Identifier="VAT">15771100</Reference>
+            <Reference Type="GCR" Identifier="DK" PassThrough="true">15771100</Reference>
+            <Reference Type="CBR" Identifier="DK" PassThrough="true">17999109</Reference>
+            <Reference Type="CBS" Identifier="DK" PassThrough="true">15771100</Reference>
+            <Reference Type="AddressShortCode">[1] NYMÃ˜LLEVEJ 6</Reference>
+            <Reference Type="AddressOverride">false</Reference>
+          </References>
+        </Party>
+        <Party Role="OY">
+          <Id>6402106337</Id>
+          <Address>
+            <Name>WIDEX A/S</Name>
+            <Line1>NYMÃ˜LLEVEJ 6</Line1>
+            <Postcode>3540</Postcode>
+            <City>LYNGE</City>
+            <CountryCode>DK</CountryCode>
+            <Country>Denmark</Country>
+            <UNLOCODE></UNLOCODE>
+          </Address>
+          <Contact>
+            <Name>Reception</Name>
+            <Phone>+4544355600</Phone>
+            <Fax>44484122</Fax>
+            <Email>accounting@widex.dk</Email>
+          </Contact>
+          <References>
+            <Reference Type="VAT" PassThrough="true" Identifier="VAT">15771100</Reference>
+            <Reference Type="GCR" Identifier="DK" PassThrough="true">15771100</Reference>
+            <Reference Type="CBR" Identifier="DK" PassThrough="true">17999109</Reference>
+            <Reference Type="CBS" Identifier="DK" PassThrough="true">15771100</Reference>
+            <Reference Type="AddressShortCode">[2] NYMÃ˜LLEVEJ 6</Reference>
+            <Reference Type="AddressOverride">false</Reference>
+          </References>
+        </Party>
+        <Party Role="HB">
+          <Id>6402108581</Id>
+          <Address>
+            <Name>Fact Danmark A/S</Name>
+            <Line1>FUGLEBAEKVEJ 1 A</Line1>
+            <Postcode>2770</Postcode>
+            <City>KASTRUP</City>
+            <CountryCode>DK</CountryCode>
+            <Country>Denmark</Country>
+            <UNLOCODE>DKKTP</UNLOCODE>
+          </Address>
+          <Contact>
+            <Name>Reception</Name>
+            <Phone>+4532464600</Phone>
+            <Fax>+4532458110</Fax>
+            <Email>book.kastrup@factdanmark.dk</Email>
+          </Contact>
+          <References>
+            <Reference Type="VAT" PassThrough="true" Identifier="VAT">19730700</Reference>
+            <Reference Type="GCR" Identifier="DK" PassThrough="true">19730700</Reference>
+            <Reference Type="LSC" Identifier="DK" PassThrough="true">1000929385</Reference>
+            <Reference Type="AddressShortCode">[1] FUGLEBAEKVEJ 1 A</Reference>
+            <Reference Type="AddressOverride">false</Reference>
+          </References>
+        </Party>
+        <Party Role="CP">
+          <Id>6402106337</Id>
+          <Address>
+            <Name>WIDEX A/S</Name>
+            <Line1>NYMÃ˜LLEVEJ 6</Line1>
+            <Postcode>3540</Postcode>
+            <City>LYNGE</City>
+            <CountryCode>DK</CountryCode>
+            <Country>Denmark</Country>
+            <UNLOCODE>DKLNE</UNLOCODE>
+          </Address>
+          <Contact>
+            <Name>Reception</Name>
+            <Phone>+4544355600</Phone>
+            <Fax>+4544484122</Fax>
+            <Email>accounting@widex.dk</Email>
+          </Contact>
+          <References>
+            <Reference Type="VAT" PassThrough="true" Identifier="VAT">15771100</Reference>
+            <Reference Type="GCR" Identifier="DK" PassThrough="true">15771100</Reference>
+            <Reference Type="CBR" Identifier="DK" PassThrough="true">17999109</Reference>
+            <Reference Type="CBS" Identifier="DK" PassThrough="true">15771100</Reference>
+            <Reference Type="AddressShortCode">[1] NYMÃ˜LLEVEJ 6</Reference>
+            <Reference Type="AddressOverride">false</Reference>
+          </References>
+        </Party>
+        <Party Role="DC">
+          <Id>6408408368</Id>
+          <Address>
+            <Name>C-Trans S.R.L.</Name>
+            <Line1>CALLE HERNAN ARDAYA PAZ NO20</Line1>
+            <Postcode>0000</Postcode>
+            <City>SANTA CRUZ</City>
+            <CountryCode>BO</CountryCode>
+            <UNLOCODE>BOSRZ</UNLOCODE>
+          </Address>
+        </Party>
+        <Party Role="CA">
+          <Id>65292248</Id>
+          <Address>
+            <Name>Amerijet International Inc.</Name>
+            <Line1>2800 S. Andrews Avenue</Line1>
+            <Postcode>33316</Postcode>
+            <City>Fort Lauderdale</City>
+            <CountryCode>SK</CountryCode>
+            <UNLOCODE>SKBTS</UNLOCODE>
+          </Address>
+        </Party>
+      </Parties>
+      <ReleaseDocumentCode>EBL</ReleaseDocumentCode>
+      <NumberOfOriginalBills>0</NumberOfOriginalBills>
+      <NumberOfCopyBills>1</NumberOfCopyBills>
+      <NatureOfCargo>General</NatureOfCargo>
+      <TOD>
+        <Term>CIP</Term>
+        <Type>Incoterms</Type>
+        <Location>
+          <Place>La Paz</Place>
+        </Location>
+      </TOD>
+      <PaymentInstruction>PREPAID</PaymentInstruction>
+      <NumberOfPackages Uom="PKG">6</NumberOfPackages>
+      <GrossWeight Uom="KG">24.000</GrossWeight>
+      <ChargeableWeight Uom="KG">35.500</ChargeableWeight>
+      <Volume Uom="M3">0.214</Volume>
+      <Comments>
+        <Text Type="BarcodeNote">
+          <Line1>
+											
+											--Start Barcodes--
+Pack_1 [00157145950686198689]
+Pack_2 [00157145950686198696;00157145950686198702]
+Pack_3 [00157145950686198719]
+Pack_4 [00157145950686198726]
+Pack_5 [00157145950686198733]
+--Stop Barcodes--</Line1>
+        </Text>
+        <Text Type="GoodsDescription">
+          <Line1>HEARING AIDS AND PARTS
+
+</Line1>
+        </Text>
+        <Text Type="HandlingInstructions">
+          <Line1>SPX - KC NO.:: DK/KC/02846-01/0513</Line1>
+        </Text>
+        <Text Type="BasicGoodsDescription">
+          <Line1>6 Colli 24,0 kgs brt / CBM 0,215 /</Line1>
+        </Text>
+      </Comments>
+      <GoodsItems>
+        <Item>
+          <Sequence>1</Sequence>
+          <NumberOfPackages>1</NumberOfPackages>
+          <PackageType>PKG</PackageType>
+          <GrossWeight Uom="KG">7.000</GrossWeight>
+          <Volume Uom="M3">0.045</Volume>
+          <Length Uom="CM">40.000</Length>
+          <Width Uom="CM">59.000</Width>
+          <Height Uom="CM">19.000</Height>
+          <Stackability>1</Stackability>
+          <CommodityCode>GEN</CommodityCode>
+          <Comments>
+            <Text Type="GoodsDescription">
+              <Line1>Parts for hearing aids</Line1>
+            </Text>
+          </Comments>
+          <NatureOfGoods>General</NatureOfGoods>
+          <PackageReferences>
+            <Reference Assignor="Shipper" Type="PackageMarks">122312</Reference>
+            <Reference Assignor="Carrier" Type="PackageIdentifier">00157145950686198689</Reference>
+          </PackageReferences>
+          <ContainerNumber></ContainerNumber>
+          <PackingOrder>0</PackingOrder>
+        </Item>
+        <Item>
+          <Sequence>2</Sequence>
+          <NumberOfPackages>2</NumberOfPackages>
+          <PackageType>PKG</PackageType>
+          <GrossWeight Uom="KG">9.000</GrossWeight>
+          <Volume Uom="M3">0.095</Volume>
+          <Length Uom="CM">34.000</Length>
+          <Width Uom="CM">56.000</Width>
+          <Height Uom="CM">25.000</Height>
+          <Stackability>1</Stackability>
+          <CommodityCode>GEN</CommodityCode>
+          <Comments>
+            <Text Type="GoodsDescription">
+              <Line1>Parts for hearing aids</Line1>
+            </Text>
+          </Comments>
+          <NatureOfGoods>General</NatureOfGoods>
+          <PackageReferences>
+            <Reference Assignor="Shipper" Type="PackageMarks">122312</Reference>
+            <Reference Assignor="Carrier" Type="PackageIdentifier">00157145950686198696</Reference>
+            <Reference Assignor="Carrier" Type="PackageIdentifier">00157145950686198702</Reference>
+          </PackageReferences>
+          <ContainerNumber></ContainerNumber>
+          <PackingOrder>0</PackingOrder>
+        </Item>
+        <Item>
+          <Sequence>3</Sequence>
+          <NumberOfPackages>1</NumberOfPackages>
+          <PackageType>PKG</PackageType>
+          <GrossWeight Uom="KG">5.500</GrossWeight>
+          <Volume Uom="M3">0.051</Volume>
+          <Length Uom="CM">40.000</Length>
+          <Width Uom="CM">51.000</Width>
+          <Height Uom="CM">25.000</Height>
+          <Stackability>1</Stackability>
+          <CommodityCode>GEN</CommodityCode>
+          <Comments>
+            <Text Type="GoodsDescription">
+              <Line1>Parts for hearing aids</Line1>
+            </Text>
+          </Comments>
+          <NatureOfGoods>General</NatureOfGoods>
+          <PackageReferences>
+            <Reference Assignor="Shipper" Type="PackageMarks">122312</Reference>
+            <Reference Assignor="Carrier" Type="PackageIdentifier">00157145950686198719</Reference>
+          </PackageReferences>
+          <ContainerNumber></ContainerNumber>
+          <PackingOrder>0</PackingOrder>
+        </Item>
+        <Item>
+          <Sequence>4</Sequence>
+          <NumberOfPackages>1</NumberOfPackages>
+          <PackageType>PKG</PackageType>
+          <GrossWeight Uom="KG">2.000</GrossWeight>
+          <Volume Uom="M3">0.015</Volume>
+          <Length Uom="CM">39.000</Length>
+          <Width Uom="CM">34.000</Width>
+          <Height Uom="CM">11.000</Height>
+          <Stackability>1</Stackability>
+          <CommodityCode>GEN</CommodityCode>
+          <Comments>
+            <Text Type="GoodsDescription">
+              <Line1>Hearing aids</Line1>
+            </Text>
+          </Comments>
+          <NatureOfGoods>General</NatureOfGoods>
+          <PackageReferences>
+            <Reference Assignor="Shipper" Type="PackageMarks">122314</Reference>
+            <Reference Assignor="Carrier" Type="PackageIdentifier">00157145950686198726</Reference>
+          </PackageReferences>
+          <ContainerNumber></ContainerNumber>
+          <PackingOrder>0</PackingOrder>
+        </Item>
+        <Item>
+          <Sequence>5</Sequence>
+          <NumberOfPackages>1</NumberOfPackages>
+          <PackageType>PKG</PackageType>
+          <GrossWeight Uom="KG">0.500</GrossWeight>
+          <Volume Uom="M3">0.008</Volume>
+          <Length Uom="CM">20.000</Length>
+          <Width Uom="CM">20.000</Width>
+          <Height Uom="CM">20.000</Height>
+          <Stackability>1</Stackability>
+          <CommodityCode>GEN</CommodityCode>
+          <Comments>
+            <Text Type="GoodsDescription">
+              <Line1>Parts for hearing aids</Line1>
+            </Text>
+          </Comments>
+          <NatureOfGoods>General</NatureOfGoods>
+          <PackageReferences>
+            <Reference Assignor="Shipper" Type="PackageMarks">122043</Reference>
+            <Reference Assignor="Carrier" Type="PackageIdentifier">00157145950686198733</Reference>
+          </PackageReferences>
+          <ContainerNumber></ContainerNumber>
+          <PackingOrder>0</PackingOrder>
+        </Item>
+      </GoodsItems>
+      <DropModePickup>
+        <Code></Code>
+        <Description></Description>
+      </DropModePickup>
+      <DropModeDelivery>
+        <Code></Code>
+        <Description></Description>
+      </DropModeDelivery>
+      <AWBDocuments>
+        <AWBDocument>
+          <Currency>DKK</Currency>
+          <ChargesPayment>
+            <Code>PP</Code>
+            <Description>All Charges Prepaid Cash</Description>
+          </ChargesPayment>
+          <WeightChargesPayment>
+            <Code>P</Code>
+            <Description>Prepaid</Description>
+          </WeightChargesPayment>
+          <IssueDate>2020-03-20T00:00:00</IssueDate>
+          <TotalValuationPrepaid Currency="DKK">0</TotalValuationPrepaid>
+          <TotalValuationCollect Currency="DKK">0</TotalValuationCollect>
+          <TotalTaxPrepaid Currency="DKK">0</TotalTaxPrepaid>
+          <TotalTaxCollect Currency="DKK">0</TotalTaxCollect>
+          <ValueForCarriage Currency="DKK">0</ValueForCarriage>
+          <ValueForCustoms Currency="DKK">0</ValueForCustoms>
+          <AmountOfInsurance Currency="DKK">0</AmountOfInsurance>
+          <ShippersLoadAndCount>0</ShippersLoadAndCount>
+          <References />
+          <Parties>
+            <Party Role="CN">
+              <Id>68022493</Id>
+              <Address>
+                <Name>SOLUCIONES AUDITIVAS BOLIVIA SRL</Name>
+                <Line1>CALLE MAYOR ROCHA NO 0132 (ESTE)</Line1>
+                <Line2>ENTRE AV. AYACUCHO Y CALLE BAPTISTA</Line2>
+                <City>COCHABAMBA</City>
+                <CountryCode>BO</CountryCode>
+                <Country>Bolivia</Country>
+              </Address>
+              <References>
+                <Reference Type="PaperOverrideLine1" PassThrough="true">SOLUCIONES AUDITIVAS BOLIVIA SRL</Reference>
+                <Reference Type="PaperOverrideLine2" PassThrough="true">CALLE MAYOR ROCHA NO 0132 (ESTE)</Reference>
+                <Reference Type="PaperOverrideLine3" PassThrough="true">ENTRE AV. AYACUCHO Y CALLE BAPTISTA</Reference>
+                <Reference Type="PaperOverrideLine4" PassThrough="true">COCHABAMBA  BO</Reference>
+              </References>
+            </Party>
+            <Party Role="CZ">
+              <Id>6402106337</Id>
+              <Address>
+                <Name>WIDEX A/S</Name>
+                <Line1>NYMOELLEVEJ 6 LYNGE</Line1>
+                <Line2>DENMARK</Line2>
+                <Postcode>3540</Postcode>
+                <City>COPENHAGEN</City>
+                <State>DENMARK</State>
+                <CountryCode>DK</CountryCode>
+                <Country>Denmark</Country>
+              </Address>
+              <References>
+                <Reference Type="PaperOverrideLine1" PassThrough="true">WIDEX A/S</Reference>
+                <Reference Type="PaperOverrideLine2" PassThrough="true">NYMOELLEVEJ 6 LYNGE</Reference>
+                <Reference Type="PaperOverrideLine3" PassThrough="true">DENMARK</Reference>
+                <Reference Type="PaperOverrideLine4" PassThrough="true">COPENHAGEN DENMARK DK</Reference>
+                <Reference Type="PaperOverrideLine5" PassThrough="true">Pre-alert NRT</Reference>
+              </References>
+            </Party>
+          </Parties>
+          <Dates />
+          <Locations />
+          <WeightCharges>
+            <WeightCharge>
+              <ChargeableWeight Uom="KG">35.5</ChargeableWeight>
+              <GoodsDescription>HEARING AIDS AND PARTS</GoodsDescription>
+              <GrossWeight Uom="KG">24</GrossWeight>
+              <LineNumber>1</LineNumber>
+              <NumberOfPieces>6</NumberOfPieces>
+              <RateCharge>82.14</RateCharge>
+              <RateClass>
+                <Code>N</Code>
+                <Description>Normal Charge</Description>
+              </RateClass>
+              <TotalCharge Currency="DKK">2916.0000</TotalCharge>
+            </WeightCharge>
+            <WeightCharge>
+              <ChargeableWeight Uom="">0</ChargeableWeight>
+              <GoodsDescription>ETA: 28-Mar-20 00:00</GoodsDescription>
+              <GrossWeight Uom="">0</GrossWeight>
+              <LineNumber>2</LineNumber>
+              <NumberOfPieces>0</NumberOfPieces>
+              <RateCharge>0</RateCharge>
+              <TotalCharge Currency="DKK">0</TotalCharge>
+            </WeightCharge>
+            <WeightCharge>
+              <ChargeableWeight Uom="">0</ChargeableWeight>
+              <GoodsDescription>VOL 0.214 M3</GoodsDescription>
+              <GrossWeight Uom="">0</GrossWeight>
+              <LineNumber>3</LineNumber>
+              <NumberOfPieces>0</NumberOfPieces>
+              <RateCharge>0</RateCharge>
+              <TotalCharge Currency="DKK">0</TotalCharge>
+            </WeightCharge>
+          </WeightCharges>
+        </AWBDocument>
+      </AWBDocuments>
+    </ShipmentDetails>
+    <TransportStages>
+      <Stage>
+        <Qualifier>MainCarriage</Qualifier>
+        <References>
+          <Reference Type="MasterBill">81087777117</Reference>
+          <Reference Type="TransportMasterId">CDK395137</Reference>
+          <Reference Type="TransportMasterType">AGT</Reference>
+        </References>
+        <ModeOfTransport>Air</ModeOfTransport>
+        <MeansOfTransport>
+          <Id>M67200</Id>
+        </MeansOfTransport>
+        <Carrier>
+          <Code>65292248</Code>
+          <Name>Amerijet International Inc.</Name>
+          <Nationality>SK</Nationality>
+        </Carrier>
+        <Locations>
+          <Location Type="Departure">
+            <Code>DKCPH</Code>
+            <Place>Copenhagen</Place>
+            <CountryCode>DK</CountryCode>
+            <Country>Denmark</Country>
+          </Location>
+          <Location Type="Destination">
+            <Code>BOLPB</Code>
+            <Place>La Paz</Place>
+            <CountryCode>BO</CountryCode>
+            <Country>Bolivia</Country>
+          </Location>
+          <Location Type="Loading">
+            <Code>DKCPH</Code>
+            <Place>Copenhagen</Place>
+            <CountryCode>DK</CountryCode>
+            <Country>Denmark</Country>
+          </Location>
+          <Location Type="Unloading">
+            <Code>BOLPB</Code>
+            <Place>La Paz</Place>
+            <CountryCode>BO</CountryCode>
+            <Country>Bolivia</Country>
+          </Location>
+        </Locations>
+        <Dates>
+          <Date Type="ScheduledDeparture">
+            <Option>ON</Option>
+            <DateTime>2020-03-21T00:00:00</DateTime>
+          </Date>
+          <Date Type="ScheduledShipmentDeparture">
+            <Option>ON</Option>
+            <DateTime>2020-03-21T00:00:00</DateTime>
+          </Date>
+          <Date Type="ScheduledArrival">
+            <Option>ON</Option>
+            <DateTime>2020-03-28T00:00:00</DateTime>
+          </Date>
+          <Date Type="ScheduledShipmentArrival">
+            <Option>ON</Option>
+            <DateTime>2020-03-28T00:00:00</DateTime>
+          </Date>
+          <Date Type="ActualDeparture">
+            <Option>ON</Option>
+            <DateTime>2020-03-21T00:00:00</DateTime>
+          </Date>
+          <Date Type="ActualArrival">
+            <Option>ON</Option>
+            <DateTime>2020-04-11T00:00:00</DateTime>
+          </Date>
+        </Dates>
+        <TypeOfService>LSE</TypeOfService>
+        <ServiceRequirements>
+          <Service>
+            <Code>CLA</Code>
+          </Service>
+        </ServiceRequirements>
+      </Stage>
+      <Stage>
+        <Sequence>1</Sequence>
+        <Qualifier>PlannedLeg</Qualifier>
+        <References>
+          <Reference Type="TransportMasterId">CDK395137</Reference>
+          <Reference Type="MasterBill">81087777117</Reference>
+        </References>
+        <ModeOfTransport>Air</ModeOfTransport>
+        <TransportType>Flight1</TransportType>
+        <MeansOfTransport>
+          <Id>M67200</Id>
+        </MeansOfTransport>
+        <Locations>
+          <Location Type="Loading">
+            <Code>DKCPH</Code>
+            <Place>Copenhagen</Place>
+            <CountryCode>DK</CountryCode>
+            <Country>Denmark</Country>
+          </Location>
+          <Location Type="Unloading">
+            <Code>LULUX</Code>
+            <Place>Luxembourg</Place>
+            <CountryCode>LU</CountryCode>
+            <Country></Country>
+          </Location>
+        </Locations>
+        <Dates>
+          <Date Type="ScheduledDeparture">
+            <Option>ON</Option>
+            <DateTime>2020-03-21T00:00:00</DateTime>
+          </Date>
+          <Date Type="ActualDeparture">
+            <Option>ON</Option>
+            <DateTime>2020-03-21T00:00:00</DateTime>
+          </Date>
+          <Date Type="ScheduledArrival">
+            <Option>ON</Option>
+            <DateTime>2020-03-22T00:00:00</DateTime>
+          </Date>
+          <Date Type="ActualArrival">
+            <Option>ON</Option>
+            <DateTime>2020-03-22T00:00:00</DateTime>
+          </Date>
+        </Dates>
+      </Stage>
+      <Stage>
+        <Sequence>2</Sequence>
+        <Qualifier>PlannedLeg</Qualifier>
+        <References>
+          <Reference Type="TransportMasterId">CDK395137</Reference>
+          <Reference Type="MasterBill">81087777117</Reference>
+        </References>
+        <ModeOfTransport>Air</ModeOfTransport>
+        <TransportType>Flight2</TransportType>
+        <MeansOfTransport>
+          <Id>CV8604</Id>
+        </MeansOfTransport>
+        <Locations>
+          <Location Type="Loading">
+            <Code>LULUX</Code>
+            <Place>Luxembourg</Place>
+            <CountryCode>LU</CountryCode>
+            <Country></Country>
+          </Location>
+          <Location Type="Unloading">
+            <Code>USMIA</Code>
+            <Place>Miami</Place>
+            <CountryCode>US</CountryCode>
+            <Country>United States</Country>
+          </Location>
+        </Locations>
+        <Dates>
+          <Date Type="ScheduledDeparture">
+            <Option>ON</Option>
+            <DateTime>2020-03-26T15:00:00</DateTime>
+          </Date>
+          <Date Type="ActualDeparture">
+            <Option>ON</Option>
+            <DateTime>2020-03-26T15:00:00</DateTime>
+          </Date>
+          <Date Type="ScheduledArrival">
+            <Option>ON</Option>
+            <DateTime>2020-03-26T18:45:00</DateTime>
+          </Date>
+          <Date Type="ActualArrival">
+            <Option>ON</Option>
+            <DateTime>2020-04-07T11:06:00</DateTime>
+          </Date>
+        </Dates>
+      </Stage>
+      <Stage>
+        <Sequence>3</Sequence>
+        <Qualifier>PlannedLeg</Qualifier>
+        <References>
+          <Reference Type="TransportMasterId">CDK395137</Reference>
+          <Reference Type="MasterBill">81087777117</Reference>
+        </References>
+        <ModeOfTransport>Air</ModeOfTransport>
+        <TransportType>Flight3</TransportType>
+        <MeansOfTransport>
+          <Id>B1751</Id>
+        </MeansOfTransport>
+        <Locations>
+          <Location Type="Loading">
+            <Code>USMIA</Code>
+            <Place>Miami</Place>
+            <CountryCode>US</CountryCode>
+            <Country>United States</Country>
+          </Location>
+          <Location Type="Unloading">
+            <Code>BOLPB</Code>
+            <Place>La Paz</Place>
+            <CountryCode>BO</CountryCode>
+            <Country>Bolivia</Country>
+          </Location>
+        </Locations>
+        <Dates>
+          <Date Type="ScheduledDeparture">
+            <Option>ON</Option>
+            <DateTime>2020-03-28T00:00:00</DateTime>
+          </Date>
+          <Date Type="ActualDeparture">
+            <Option>ON</Option>
+            <DateTime>2020-04-11T00:00:00</DateTime>
+          </Date>
+          <Date Type="ScheduledArrival">
+            <Option>ON</Option>
+            <DateTime>2020-03-28T00:00:00</DateTime>
+          </Date>
+          <Date Type="ActualArrival">
+            <Option>ON</Option>
+            <DateTime>2020-04-11T00:00:00</DateTime>
+          </Date>
+        </Dates>
+      </Stage>
+    </TransportStages>
+    <EquipmentTypes />
+    <ChargeLines>
+      <ChargeLine>
+        <ChargeCode>AHE</ChargeCode>
+        <Description>Airline Handling</Description>
+        <CostAmount Currency="DKK">133.6600</CostAmount>
+        <LocalCostAmount Currency="DKK">133.6600</LocalCostAmount>
+        <CostTaxAmount Currency="DKK">33.42</CostTaxAmount>
+        <CostTaxCode>MOM</CostTaxCode>
+        <IsCostPosted>false</IsCostPosted>
+        <RevenueTaxAmount Currency="DKK">0</RevenueTaxAmount>
+        <RevenueTaxCode>FREEMOM</RevenueTaxCode>
+        <IsRevenuePosted>false</IsRevenuePosted>
+        <CreditorCode>6402111562</CreditorCode>
+        <DebtorCode>6402106337</DebtorCode>
+        <BranchCode>BRY</BranchCode>
+        <DepartmentCode>FEA</DepartmentCode>
+        <RevenueInvoiceType>FIN</RevenueInvoiceType>
+      </ChargeLine>
+      <ChargeLine>
+        <ChargeCode>FRT</ChargeCode>
+        <Description>Freight iflg. aftale med Karin Sonne</Description>
+        <CostAmount Currency="DKK">2250.0000</CostAmount>
+        <LocalCostAmount Currency="DKK">2250.0000</LocalCostAmount>
+        <CostTaxCode>FREEMOM</CostTaxCode>
+        <IsCostPosted>false</IsCostPosted>
+        <RevenueAmount Currency="DKK">2916.0000</RevenueAmount>
+        <LocalRevenueAmount Currency="DKK">2916.0000</LocalRevenueAmount>
+        <RevenueTaxAmount Currency="DKK">0</RevenueTaxAmount>
+        <RevenueTaxCode>FREEMOM</RevenueTaxCode>
+        <IsRevenuePosted>false</IsRevenuePosted>
+        <CreditorCode>6402746405</CreditorCode>
+        <DebtorCode>6402106337</DebtorCode>
+        <BranchCode>BRY</BranchCode>
+        <DepartmentCode>FEA</DepartmentCode>
+        <RevenueInvoiceType>FIN</RevenueInvoiceType>
+      </ChargeLine>
+      <ChargeLine>
+        <ChargeCode>DPO</ChargeCode>
+        <Description>DPD - DSV Protect</Description>
+        <CostAmount Currency="DKK">12.0000</CostAmount>
+        <LocalCostAmount Currency="DKK">12.0000</LocalCostAmount>
+        <CostTaxCode>FREEMOM</CostTaxCode>
+        <IsCostPosted>false</IsCostPosted>
+        <RevenueTaxAmount Currency="DKK">0</RevenueTaxAmount>
+        <RevenueTaxCode>FREEMOM</RevenueTaxCode>
+        <IsRevenuePosted>false</IsRevenuePosted>
+        <CreditorCode>6401202984</CreditorCode>
+        <DebtorCode>6402106337</DebtorCode>
+        <BranchCode>BRY</BranchCode>
+        <DepartmentCode>FEA</DepartmentCode>
+        <RevenueInvoiceType>FIN</RevenueInvoiceType>
+      </ChargeLine>
+    </ChargeLines>
+    <Milestones>
+      <Milestone>
+        <Sequence>100</Sequence>
+        <Code>PCF</Code>
+        <Description>100. DK - Enter Actual Pick-up</Description>
+        <OriginalScheduledDate>2020-03-19T13:00:00</OriginalScheduledDate>
+        <ScheduledDate>2020-03-19T14:00:00</ScheduledDate>
+        <ActualDate>2020-03-19T13:18:00</ActualDate>
+      </Milestone>
+    </Milestones>
+	<CustomsDeclaration>
+		<CommercialInvoices>
+			<CommercialInvoice>
+				<Comments>
+					<Text>UGFuYWxwaW5hIEVjdWFkb3IgUy5BLjtQYW5hbHBpbmEgRWN1YWRvciBTLkEuOzE3OTA3MzAxNjYwMDE7MDE7MDAxOzAwMTswMDAwMDAxNTc7QXYuIDYgZGUgRGljaWVtYnJlIE4zMi0zMTIgeSBKZWFuIEIuIEJvdXNzaW5nYXVsdCBFZGlmaWNpbyBUNiwgUGlzbyA1LCBPZmljaW5hIDUwMzswOC8wNS8yMDIwO0F2ZW5pZGEgRWwgSW5jYSwgeSBBdmVuaWRhIEFtYXpvbmFzIDQwNiwgRTQtMTgxOzA1OTA7U0k7MDQ7O0hBTExJQlVSVE9OIExBVElOIEFNRVJJQ0EgU1JMOzE3OTE4NTE2MzYwMzI7MzEyLjAwOzAuMDA7W0lUMzswMDAwOzAuMDA7MDAwMDswLjAwXVtJVDI7MjszMTIuMDA7MTI7MjQuMDBdMC4wMDszMzYuMDA7RE9MQVI7W1BBRzIwOzMzNi4wMDswO0RpYXNdO1tERVRDQ0w7MDAwO0lNUE9SVCBDVVNUT01TIENMRUFSQU5DRSBDSEFSR0VTOzEuMDA7MjAwLjAwOzAuMDA7MjAwLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzI7MTI7MjAwLjAwOzI0LjAwMDBdO1tERVRMUkZMOzAwMDtSRUlNQlVSU0VNRU5UIFdBUkVIT1VTRSBGT1JLTElGVCBBTkQgT1RIRVIgRVFVSVBNRU5UOzEuMDA7MTEyLjAwOzAuMDA7MTEyLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzAuMDA7MDA7MC4wMDswLjAwXWVtYWlsQ2xpZW50ZT1OZWxzb24uTWVuZGV6QHBhbmFscGluYS5jb207Q09ESUdPSU5URVJOT1NBUD0wMDAwMDAxNTc7Q09ESUdPSU5URVJOT1NBUENMSUVOVEU9Njc5MDY4OTI7UkVGRVJFTkNFPTtIQVdCL0JMPVNBTzc1NTg4NDE=</Text>
+				</Comments>
+			</CommercialInvoice>
+		</CommercialInvoices>
+	</CustomsDeclaration>
+  </ShipmentInstruction>
+</ShipmentInstructionMessage>
