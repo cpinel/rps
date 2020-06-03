@@ -1,0 +1,118 @@
+ ID      DEERE  20150213  1102 PRNT  XPANPP
+1SOLD BY:                                   COMMERCIAL INVOICE                                 PAGE    1
+    DEERE & COMPANY
+    WORLDWIDE LOGISTICS OPERATIONS            INVOICE NO: 2003 340139 DATE: 10FEB15 DESTINATION: 202003PE
+    3400 80TH STREET                          DEERE ORDER NO: 2003749009         DATE: 09FEB15 TYPE: DIS
+    MOLINE        IL  61265
+    UNITED STATES                             CUSTOMER ORDER NO:
+                                              EXIT: MILAN                              SHIP DATE: 10FEB15
+ INVOICE TO:                                  SHIPMENT ID: 2003  TEST202003PEPDC  FORWARDER: XPANPP
+    JOHN DEERE BRASIL LTDA
+    RUA SERGIO FERNANDES BORGES SOARES,
+    DISTRITO INDUSTRIAL                       PAYMENT TERMS:
+    13054-709 CAMPINAS - SP                      DUE THE FIRST DAY OF THE FOURTH MONTH FOLLOWING
+    BRAZIL                                       THE MONTH OF SHIPMENT OF GOODS.
+    CNPJ89.674.782/0013-91
+
+ SHIP TO:
+    JOHN DEERE BRASIL LTDA
+    RUA SERGIO FERNANDES BORGES SOARES,
+    DISTRITO INDUSTRIAL
+    13054-709 CAMPINAS - SP   BRAZIL
+    CNPJ89.674.782/0013-91                                                                   AMOUNT IN USD
+
+ SHIPPING MARKS:                               FOB FABRICA                                           55.70
+
+                                               INLAND FREIGHT                                          .23
+                                               AIRFREIGHT
+                                               FORWARDER FEES
+                                               INSURANCE
+
+
+
+
+
+
+
+                                               DAP VIRACOPAS AIRPORT                                 55.93
+
+
+
+
+
+
+
+
+
+
+       1 PACKAGE(S)        .453 GROSS KG          .953 NET KG
+       1 PACKAGE(S)       1.000 GROSS LBS        2.101 NET LBS             CUBIC FEET
+1SOLD BY:                                   COMMERCIAL INVOICE                                 PAGE    2
+    DEERE & COMPANY
+    WORLDWIDE LOGISTICS OPERATIONS            INVOICE NO: 2003 340139 DATE: 10FEB15 DESTINATION: 202003PE
+    3400 80TH STREET                          DEERE ORDER NO: 2003749009         DATE: 09FEB15 TYPE: DIS
+    MOLINE        IL  61265                   EXIT: MILAN                              SHIP DATE: 10FEB15
+    UNITED STATES
+
+
+ (0504 ) GENERAL LICENSE - NLR
+         THESE COMMODITIES WERE EXPORTED FROM THE UNITED
+         STATES IN ACCORDANCE WITH THE EXPORT ADMINISTRATION
+         REGULATIONS.  DIVERSION CONTRARY TO U.S. LAW PROHIBITED.
+
+ (0591 ) WE HEREBY CERTIFY THAT THE STATEMENTS HEREIN ARE TRUE AND
+         CORRECT IN ALL RESPECTS.
+         DEERE & COMPANY
+
+ (0658 ) AES POST 36238258000 +DOE
+
+ PACKAGE LIST:
+           CASE                                 PACKAGE     GROSS     NET         DIMENSIONS        CUBIC
+           TYPE   PACKAGE DESCRIPTION           NUMBER       LBS      LBS     LGTH   WDTH    HGT    FEET
+
+           CTN    CARTON                        C52637      1.000      2.101       X      X
+1SHIPPED BY:                       INVOICE NO: 2003 340139 DATE: 10FEB15 DESTINATION: 202003PE   PAGE    3
+    DEERE & COMPANY                      DEERE ORDER NO: 2003749009  DATE: 09FEB15 TYPE: DIS
+                                         CUSTOMER ORDER NO:
+                                         SHIPMENT ID: 2003  TEST202003PEPDC  LICENSE NO:
+
+                     C                                        P                     UNIT     N  EXTENDED  V
+    PART     PACKAGE S  P                               SHIP  K   ORD   EXTENDED    PRICE    E   PRICE    A
+   NUMBER    NUMBER  O  T         DESCRIPTION           QTY   G   QTY    NET KG      USD     T    USD     T
+
+ RE69581      C52637 US   THERMOSTAT                    10       10       .953      5.57          55.70
+
+ TOTALS FOR ORDER 2003749009         1 TOTAL LINE ITEMS                  .953                    55.70
+
+1SHIPPED BY:                          EXPORT PARTS PACKING LIST                               PAGE    4
+       DEERE & COMPANY
+                                              INVOICE NO: 2003 340139  10FEB15 DESTINATION: 202003PE
+ INVOICE TO:                                  EXIT: MILAN                              SHIP DATE: 10FEB15
+       JOHN DEERE BRASIL LTDA                 SHIPMENT ID: 2003  TEST202003PEPDC  FORWARDER: XPANPP
+       RUA SERGIO FERNANDES BORGES SOARES,
+
+                                       C                                 DEERE
+    PACKAGE      PART        SHIP      S  P                              ORDER     CUSTOMER        BIN
+    NUMBER      NUMBER       QTY   BND O  D       DESCRIPTION            NUMBER  ORDER NUMBER    LOCATION
+
+    C52637   RE69581            10     US   THERMOSTAT                   49009                 E387A01B
+
+                                      CASE       DIMENSIONS (MM)      GROSS   NET   CUBIC
+                                      TYPE   LGTH   WDTH   HGT           LBS  LBS   FEET
+
+                                      CTN                           1.000      2.101
+
+
+ TOTALS FOR COMMERCIAL INVOICE 2003 340139   LINE ITEMS     1       GROSS LBS       1.000
+
+
+                        CASE
+                 QTY    TYPE    PACKAGE DESCRIPTION
+
+                    1    CTN     CARTON
+1        DNS REPORT #664              JOHN DEERE BRASIL LTDA.                         PAGE    1
+                         STATUS FOR CUSTOMER ORDER:                                 DATE 13FEB15
+         DEERE ORDER NO  : 2003749009     DESTINATION: 202003PE             TOTAL ITEMS ORDERED:       1
+  PART           QTY   TOTAL                  SHIPMENT INFORMATION
+  NUMBER        ORDED  SHIPD DESCRIPTION
+  RE69581           10                          10 10FEB15 340139
