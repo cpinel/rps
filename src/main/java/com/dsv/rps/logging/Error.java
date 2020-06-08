@@ -1,4 +1,4 @@
-package com.dsv.rps.utils;
+package com.dsv.rps.logging;
 
 public enum Error {
 

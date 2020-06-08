@@ -3,8 +3,8 @@ package com.dsv.rps.beans;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dsv.rps.utils.Error;
-import com.dsv.rps.utils.Warning;
+import com.dsv.rps.logging.Error;
+import com.dsv.rps.logging.Warning;
 
 public class OutputBean {
 
