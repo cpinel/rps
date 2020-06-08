@@ -18,6 +18,7 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 
 public class PdfBuilder {
@@ -39,16 +40,25 @@ public class PdfBuilder {
 	{
 		
 		
-	return	new Cell().add(object).setBorder(Border.NO_BORDER).setFont(defaultFont).setFontSize(9);
+	return	new Cell().add(object).setBorder(Border.NO_BORDER).setFont(defaultFont).setFontSize(9) ;
 	 	
 		
 	}
 	
-	public static Cell createCell(String object)
+	public static Cell createCellWithNoBorder(String object)
 	{
 		
 		
 	return	new Cell().add(object).setBorder(Border.NO_BORDER).setFont(defaultFont).setFontSize(9);
+	 	
+		
+	}
+
+	public static Cell createCell(String object)
+	{
+		
+		
+	return	new Cell().add(object).setFont(defaultFont).setFontSize(9);
 	 	
 		
 	}
@@ -91,7 +101,7 @@ public class PdfBuilder {
 		try {
 			Invoice testInvoice = Invoice.getTest();
 
-			String dest = "d:/temp/addingTable2.pdf";
+			String dest = "c:/temp/myreport.pdf";
 
 			// Creating a PdfDocument
 
