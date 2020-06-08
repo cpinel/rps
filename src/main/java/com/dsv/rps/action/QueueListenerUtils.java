@@ -7,6 +7,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.dsv.rps.logging.Error;
+import com.dsv.rps.logging.LogGroup;
+import com.dsv.rps.logging.RollingLogs;
 import com.dsv.rps.resources.Constants;
 import com.microsoft.azure.servicebus.ExceptionPhase;
 import com.microsoft.azure.servicebus.IMessage;
@@ -19,8 +22,6 @@ import com.microsoft.azure.servicebus.primitives.ServiceBusException;
 
 public class QueueListenerUtils {
 
-	public static String LAST_MESSAGE;
-	
 	private static QueueClient queueClient = null;
 	private static ExecutorService executorService = null;
 	
@@ -55,6 +56,7 @@ public class QueueListenerUtils {
 	           public CompletableFuture<Void> onMessageAsync(IMessage message)
 	           {
 	        	   System.out.println("\they message");
+	        	   RollingLogs.addItem("Incoming new message: Id = "+message.getMessageId(),LogGroup.IN_QUEUE);
 	               // receives message is passed to callback
 	               if (message.getLabel() != null &&
 	                       message.getContentType() != null &&
@@ -65,8 +67,22 @@ public class QueueListenerUtils {
 	                   // Map scientist = GSON.fromJson(new String(body, UTF_8), Map.class);
 	                    String result = new String(body, UTF_8);
 	                    System.out.println("result " + result);
+	                    RollingLogs.addItem("Content of message: Id = "+message.getMessageId() + " : " + result,LogGroup.PROCESS);
 	                    
-	                    LAST_MESSAGE = result;
+	               }
+	               else if (message.getContentType().contentEquals("application/xml"))
+	               {
+	            	   byte[] body = message.getBody();
+	                   // Map scientist = GSON.fromJson(new String(body, UTF_8), Map.class);
+	                    String result = new String(body, UTF_8);
+	                    System.out.println("result " + (result.length()>100?(result.substring(0,100) + "..."):result));
+	                    RollingLogs.addItem("Now processing message id = "+message.getMessageId() + " : " + (result.length()>100?(result.substring(0,100) + "..."):result),LogGroup.PROCESS);
+	                    
+	               }
+	               else
+	               {
+	            	   RollingLogs.addItem(Error.UNREADABLE_XML.getText() + " : Id = "+message.getMessageId() ,LogGroup.ERROR);
+	                    
 	               }
 	               return CompletableFuture.completedFuture(null);
 	           }
@@ -80,5 +96,10 @@ public class QueueListenerUtils {
             // 1 concurrent call, messages are auto-completed, auto-renew duration
             new MessageHandlerOptions(1, true, Duration.ofMinutes(1)),executorService);
 
+    }
+    
+    public static boolean isStarted()
+    {
+    	return started;
     }
 }

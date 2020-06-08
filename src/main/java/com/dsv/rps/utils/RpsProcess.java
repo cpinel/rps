@@ -6,6 +6,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Base64;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,6 +18,7 @@ import org.w3c.dom.Element;
 
 import com.dsv.rps.beans.InputBean;
 import com.dsv.rps.beans.OutputBean;
+import com.dsv.rps.logging.Error;
 import com.microsoft.azure.servicebus.IMessage;
 import com.microsoft.azure.servicebus.Message;
 
@@ -25,12 +27,10 @@ public class RpsProcess {
 	
 	public void process (IMessage inpuMessage) throws Exception
 	{
+
 		OutputBean ob = new OutputBean();
-		
 		InputBean ib = buildInputBeanFromXMLMessage ( inpuMessage,ob);
-		
 		doCalculations(ib,ob);
-				
 		IMessage outpuMessage = generateXMLOutput ( ob);
 		
 		
