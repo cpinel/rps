@@ -1,4 +1,4 @@
-package com.dsv.rps;
+package com.dsv.rps.parser;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,6 +25,8 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+
+import com.dsv.rps.bean.ChargeLine;
 
 public class ProcessRps {
 	private static Logger logger = Logger.getLogger(ProcessRps.class.getName());
@@ -273,7 +275,7 @@ public class ProcessRps {
 	public static void main(String[] args) {
 
 		ProcessRps t = new ProcessRps();
-		String firstmatch = t.listFilesForFolder(new File("d:\\test\\rps"));
+		String firstmatch = t.listFilesForFolder(new File("C:\\Users\\claude.pinel\\docs\\rps"));
 		// System.out.println(firstmatch);
 		// String myfile= t.readFile(decodefile);
 

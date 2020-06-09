@@ -1,4 +1,4 @@
-package com.dsv.rps;
+package com.dsv.rps.bean;
 import org.apache.log4j.Logger;
 
 public class ChargeLine {
