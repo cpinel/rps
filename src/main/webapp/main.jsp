@@ -22,6 +22,11 @@ else if (push != null && "w".equals(push))
 	 QueueSenderUtils.sendStaticFileToQueueWrong();
 	 %>Message sent<%
 }
+else if (push != null && "r".equals(push))
+{
+	 QueueResponseUtils.sendMessagetoQueue("<RPSReply><ID>123456789</ID><code>OK</code><format>PDF></format><binaryFile>aBcDeFgHiJ</binaryFile></RPSReply>");
+	 %>Reply sent to oubound queue. Check in Azure monitoring<%
+}
 
 %>
 
@@ -44,4 +49,11 @@ OR
 <form action = "main.jsp" method = "GET">
  		<input type = "hidden" name = "push" value="w" />
          <input type = "submit" value = "Push Wrong file" />
+</form>
+
+OR
+
+<form action = "main.jsp" method = "GET">
+ 		<input type = "hidden" name = "push" value="r" />
+         <input type = "submit" value = "Simulate reply" />
 </form>

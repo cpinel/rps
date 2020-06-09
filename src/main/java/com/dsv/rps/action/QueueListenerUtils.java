@@ -11,6 +11,7 @@ import com.dsv.rps.logging.Error;
 import com.dsv.rps.logging.LogGroup;
 import com.dsv.rps.logging.RollingLogs;
 import com.dsv.rps.resources.Constants;
+import com.dsv.rps.utils.RpsProcess;
 import com.microsoft.azure.servicebus.ExceptionPhase;
 import com.microsoft.azure.servicebus.IMessage;
 import com.microsoft.azure.servicebus.IMessageHandler;
@@ -55,7 +56,9 @@ public class QueueListenerUtils {
 	           // callback invoked when the message handler loop has obtained a message
 	           public CompletableFuture<Void> onMessageAsync(IMessage message)
 	           {
-	        	   System.out.println("\they message");
+	        	   System.out.println("*********************************************");
+	        	   System.out.println("\tnew message " + message.getMessageId());
+	        	   System.out.println(message.getContentType() + " " + message.getCorrelationId() + " " + message.getLabel() + " " + message.getExpiresAtUtc() + " " + message.getTimeToLive());
 	        	   RollingLogs.addItem("Incoming new message: Id = "+message.getMessageId(),LogGroup.IN_QUEUE);
 	               // receives message is passed to callback
 	               if (message.getLabel() != null &&
@@ -77,6 +80,18 @@ public class QueueListenerUtils {
 	                    String result = new String(body, UTF_8);
 	                    System.out.println("result " + (result.length()>100?(result.substring(0,100) + "..."):result));
 	                    RollingLogs.addItem("Now processing message id = "+message.getMessageId() + " : " + (result.length()>100?(result.substring(0,100) + "..."):result),LogGroup.PROCESS);
+	                    RpsProcess process = new RpsProcess();
+	                    
+	                    try
+	                    {
+	                    	QueueResponseUtils.sendMessagetoQueue(process.process(message));
+	                    }
+	                    catch (Exception e)
+	                    {
+	                    	e.printStackTrace();
+	                    	RollingLogs.addItem("Could not send message back to queue id " + message.getMessageId() + " : " + e.getMessage(),LogGroup.ERROR);
+	                    }
+	                    
 	                    
 	               }
 	               else
