@@ -64,7 +64,7 @@ public class QueueListenerUtils {
 	               if (message.getLabel() != null &&
 	                       message.getContentType() != null &&
 	                       message.getLabel().contentEquals("Scientist") &&
-	                       message.getContentType().contentEquals("application/xml")) {
+	                       message.getContentType().indexOf("application/xml")>-1) {
 	
 	            	   byte[] body = message.getBody();
 	                   // Map scientist = GSON.fromJson(new String(body, UTF_8), Map.class);
@@ -73,7 +73,7 @@ public class QueueListenerUtils {
 	                    RollingLogs.addItem("Content of message: Id = "+message.getMessageId() + " : " + result,LogGroup.PROCESS);
 	                    
 	               }
-	               else if (message.getContentType().contentEquals("application/xml"))
+	               else if (message.getContentType().indexOf("application/xml")>-1)
 	               {
 	            	   byte[] body = message.getBody();
 	                   // Map scientist = GSON.fromJson(new String(body, UTF_8), Map.class);
@@ -97,7 +97,7 @@ public class QueueListenerUtils {
 	               else
 	               {
 	            	   RollingLogs.addItem(Error.UNREADABLE_XML.getText() + " : Id = "+message.getMessageId() ,LogGroup.ERROR);
-	                    
+	                   
 	               }
 	               return CompletableFuture.completedFuture(null);
 	           }

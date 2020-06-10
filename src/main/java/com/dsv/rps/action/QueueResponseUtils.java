@@ -47,7 +47,7 @@ public class QueueResponseUtils {
       tasks.add(
     		  sendClient.sendAsync(message).thenRunAsync(() -> {
                   System.out.printf("\tMessage acknowledged: Id = %s\n", message.getMessageId());
-                  RollingLogs.addItem("Message sent to queue: Id = "+message.getMessageId(),LogGroup.OUT_QUEUE);
+                  RollingLogs.addItem("Reply sent to queue: Id = "+message.getMessageId(),LogGroup.OUT_QUEUE);
               }));
       
       
