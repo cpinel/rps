@@ -23,31 +23,85 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.layout.LayoutArea;
 import com.itextpdf.layout.layout.LayoutContext;
 import com.itextpdf.layout.layout.LayoutResult;
+import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 
 public class MyPdfHeaderTableHandler implements IEventHandler {
 
-	protected Table table;
-	protected Table tableLeft;
-	protected Table tableRight;
+	protected Table headerTable;
+	protected Table leftSide;
+	protected Table rightSide;
 	protected float tableHeight = 100;
 	protected Document doc;
 
-	protected static PdfFont defaultFont;
+	protected   PdfFont defaultFont;
+	protected   PdfFont boldFont;
+ 
 	
-	static {
+	 
+	public MyPdfHeaderTableHandler(Document doc, Invoice invoice) {
+		try{defaultFont = PdfFontFactory.createFont(FontConstants.HELVETICA);
+		boldFont = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
+		}
+		catch (Exception ex) {ex.printStackTrace();}
 		
-		try {
-			 	defaultFont = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
-			 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+		float[] columnWidths = { 50, 50 };
+		headerTable = new Table(UnitValue.createPercentArray(columnWidths));
+
+		float[] columnWidths2 = { 100 };
+		leftSide = new Table(columnWidths2);
+ 
+		rightSide = new Table(UnitValue.createPercentArray(columnWidths));
+
+		headerTable.setBorder(Border.NO_BORDER);
+		headerTable.setWidth(doc.getPdfDocument().getDefaultPageSize().getWidth());
+		headerTable.addCell(new Cell().setBorder(Border.NO_BORDER).add(leftSide));
+		headerTable.addCell(new Cell().setBorder(Border.NO_BORDER).add(rightSide));
 		
+		leftSide.setWidth(doc.getPdfDocument().getDefaultPageSize().getWidth()/3);
+		leftSide.addCell(new Cell().setBorder(Border.NO_BORDER).add("\n\n"));
+		rightSide.setWidth(doc.getPdfDocument().getDefaultPageSize().getWidth()/3);
+	 	rightSide.addCell(new Cell().setBorder(Border.NO_BORDER).add("\n\n"));
+		rightSide.addCell(new Cell().setBorder(Border.NO_BORDER).add("\n\n"));
+		// build header structure
+		this.doc = doc;
+		// split int two
+
+	// build left 
+		BusinessPartner shipper = invoice.getPartners().get("SHP");
+		leftSide.addCell(createCell(buildParagraph("Shipper\\Exporter",shipper)));
+ 		BusinessPartner invoiceto = invoice.getPartners().get("INV");
+		leftSide.addCell(createCell(buildParagraph("Invoice To",invoiceto)));
+	 	BusinessPartner consignee = invoice.getPartners().get("CNE");
+		leftSide.addCell(createCell(buildParagraph("Ship To",consignee)));
+		headerTable.setMarginLeft(30);
+	 
+		rightSide.addCell(createCell(buildParagraph("Date",invoice.getDate())));
+		rightSide.addCell(createCell(buildParagraph("Invoice No.",invoice.getInvoiceNo())));
+		rightSide.addCell(createCell(buildParagraph("Currency",invoice.getCurrency())));
+		rightSide.addCell(createCell(buildParagraph("Incoterms",invoice.getIncoterms())));
+		rightSide.addCell(createCell(buildParagraph("Destination Code",invoice.getDestinationCode())));
+		rightSide.addCell(createCell(buildParagraph("Exit",invoice.getExit())));
+		rightSide.addCell(createCell(buildParagraph("Shipment Id",invoice.getShipmentId())));
+		rightSide.addCell(createCell(buildParagraph("Ship Date",invoice.getShipDate())));
+		
+		String paymentTerms="";
+		for (String paymentTerm :invoice.getPaymentTerms())
+		{
+			paymentTerms+=paymentTerm+"\n" ;
+			
+		}
+		rightSide.addCell(new Cell(1,2).setBorder(Border.NO_BORDER).add(new Paragraph(paymentTerms).setFontSize(9).setHeight(60).setBorder(new SolidBorder(1))));
+		headerTable.addCell(new Cell().setBorder(Border.NO_BORDER));
+		Rectangle area = new Rectangle(0, 0, 500, 500);
+		LayoutResult result = headerTable.createRendererSubTree().setParent(doc.getRenderer())
+				.layout(new LayoutContext(new LayoutArea(0, area)));
+		tableHeight = result.getOccupiedArea().getBBox().getHeight();
+		System.out.println(result.getOccupiedArea().getBBox().getHeight());
 	}
 	
 	public float getTableHeight() {
@@ -57,96 +111,76 @@ public class MyPdfHeaderTableHandler implements IEventHandler {
 	public void setTableHeight(float tableHeight) {
 		this.tableHeight = tableHeight;
 	}
-	
-	public Cell createCell(IBlockElement object)
-	{
-		
-		
-	return	new Cell().add(object).setBorder(Border.NO_BORDER).setFont(defaultFont).setFontSize(9);
-	 	
-		
+
+	public Cell createCell(IBlockElement object) {
+
+		return new Cell().add(object).setBorder(Border.NO_BORDER).setFont(defaultFont).setFontSize(9);
+
+	}
+	private Paragraph buildParagraph(String title, String text) {
+		if (text == null)
+			text = new String(" ");
+		Paragraph para1 = new Paragraph().setHeight(30).setWidth(150);
+		para1.add(new Text(title).setBold()); 
+		para1.add("\n");
+		para1.add(text+" ");
+		para1.setBorder(new SolidBorder(1));
+		para1.setMargin(1);
+		para1.setBackgroundColor(Color.WHITE);
+
+		return para1;
 	}
 
-// this will create header with partner details
-	public MyPdfHeaderTableHandler(Document doc, Invoice invoice) {
-		 
-		// build header structure
-		this.doc = doc;
-		//split int two
-		float[] columnWidths = { 50, 50 };
-		table = new Table(UnitValue.createPercentArray(columnWidths));
-		
-		float[] columnWidths2 = { 100 };
-		tableLeft = new Table(columnWidths2);
-		
-		table.setBorder(Border.NO_BORDER);
-		table.setWidth(doc.getPdfDocument().getDefaultPageSize().getWidth());
+	private Paragraph buildParagraph(String title, BusinessPartner object) {
+		if (object == null)
+			object = new BusinessPartner();
+		Paragraph para1 = new Paragraph();
+		para1.add(new Text(title).setBold());
+		para1.add("\n");
+		StringBuilder sb = new StringBuilder();
+		sb.append(object.getName()).append("\n").append(object.getAdress1a()).append("\n").append(object.getAdress2())
+				.append("\n").append(object.getAdress3()).append("\n");
+		para1.add(sb.toString());
+		para1.setBorder(new SolidBorder(1));
+		para1.setMargin(1);
+		para1.setBackgroundColor(Color.WHITE);
 
-		table.addCell(new Cell().setBorder(Border.NO_BORDER).add(tableLeft)); 
-		
-		
-		BusinessPartner shp = invoice.getPartners().get("SHP");
-		if (shp != null)
-
-		{
-			Paragraph para1 = new Paragraph();
-			StringBuilder sb = new StringBuilder();
-			sb.append(shp.getName()).append("\n").append(shp.getAdress1a()).append("\n").append(shp.getAdress2())
-					.append("\n").append(shp.getAdress3()).append("\n").append(shp.getAdress4()).append("\n");
-			para1.add(sb.toString());
-			para1.setBorder(new SolidBorder(1));
-			para1.setMargin(3);
-			para1.setBackgroundColor(Color.WHITE);
-			tableLeft.addCell(createCell(para1) );
-		} else
-			tableLeft.addCell("").setBorder(Border.NO_BORDER);
-		  
-		
-		BusinessPartner cne = invoice.getPartners().get("CNE");
-		if (cne != null)
-
-		{
-			Paragraph para1 = new Paragraph();
-			StringBuilder sb = new StringBuilder();
-			sb.append(cne.getName()).append("\n").append(cne).append("\n").append(cne.getAdress2())
-					.append("\n").append(cne.getAdress3()).append("\n").append(cne.getAdress4()).append("\n");
-			para1.add(sb.toString());
-			para1.setBorder(new SolidBorder(1));
-			para1.setMargin(3);
-			para1.setBackgroundColor(Color.WHITE);
-			tableLeft.addCell(createCell(para1) );
-		} else
-			tableLeft.addCell("").setBorder(Border.NO_BORDER);
-		  
-		
-		table.addCell(new Cell().setBorder(Border.NO_BORDER));
-		 Rectangle area = new Rectangle(0, 0, 500, 500);
-		    LayoutResult result = table.createRendererSubTree().setParent(doc.getRenderer()).layout(new LayoutContext(new LayoutArea(0, area)));
-		    tableHeight=    result.getOccupiedArea().getBBox().getHeight();
-System.out.println(result.getOccupiedArea().getBBox().getHeight());
+		return para1;
 	}
+
+
 
 	@Override
 	public void handleEvent(Event event) {
 		PdfDocumentEvent docEvent = (PdfDocumentEvent) event;
 		PdfPage page = docEvent.getPage();
 		Rectangle pageSize = page.getPageSize();
-		PdfDocument pdfDoc = ((PdfDocumentEvent) event).getDocument();
-		 
-		PdfCanvas pdfCanvas = new PdfCanvas(page.newContentStreamBefore(), page.getResources(), pdfDoc);
 
+		PdfDocument pdfDoc = ((PdfDocumentEvent) event).getDocument();
+
+		PdfCanvas pdfCanvas = new PdfCanvas(page.newContentStreamBefore(), page.getResources(), pdfDoc);
+// add  handler to create page number on top right, additionnally to the shipper,consignee
 		try (Canvas mycanvas = new Canvas(pdfCanvas, pdfDoc, pageSize)) {
+
+			mycanvas.add(headerTable);
 			// header
-			mycanvas.add(table);
+
+			int pageNumber = docEvent.getDocument().getPageNumber(page);
+
+			Paragraph p = new Paragraph().add("Page ").add(String.valueOf(pageNumber));
+			mycanvas.showTextAligned(p, 800, 560, TextAlignment.RIGHT);
+
+			System.out.println("dimension=" + mycanvas.getRootArea().toString());
 
 		}
+
 	}
 
 	public Table getTable() {
-		return table;
+		return headerTable;
 	}
 
-	public void setTable(Table table) {
-		this.table = table;
+	public void setTable(Table headerTable) {
+		this.headerTable = headerTable;
 	}
 }

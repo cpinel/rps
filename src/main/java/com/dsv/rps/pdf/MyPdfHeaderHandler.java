@@ -1,15 +1,19 @@
 package com.dsv.rps.pdf;
 
+import java.io.IOException;
+
+import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.events.Event;
 import com.itextpdf.kernel.events.IEventHandler;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Canvas;
+import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.property.TextAlignment;
-import com.itextpdf.layout.property.VerticalAlignment;
 
 public class MyPdfHeaderHandler implements IEventHandler {
 
@@ -30,17 +34,21 @@ public class MyPdfHeaderHandler implements IEventHandler {
 		Rectangle pageSize = page.getPageSize();
 		PdfDocument pdfDoc = ((PdfDocumentEvent) event).getDocument();
 		PdfCanvas pdfCanvas = new PdfCanvas(page.newContentStreamBefore(), page.getResources(), pdfDoc);
-		
-		
-		try  (Canvas mycanvas= new Canvas(pdfCanvas, pdfDoc, pageSize)) {
-				// header
-			mycanvas.showTextAligned("title heading", 70, pageSize.getTop() - 40, TextAlignment.CENTER,
-						VerticalAlignment.MIDDLE, 0);
-			mycanvas.showTextAligned("title heading", 70, pageSize.getTop() - 60, TextAlignment.CENTER,
-					VerticalAlignment.MIDDLE, 0);
-			mycanvas.showTextAligned("some text", pageSize.getWidth() / 2, pageSize.getTop() - 20, TextAlignment.CENTER,
-						VerticalAlignment.MIDDLE, 0);
-	 
 
-	}}
+	 
+		
+	     int pageNum = docEvent.getDocument().getPageNumber(page);
+	        PdfCanvas canvas = new PdfCanvas(page);
+	        canvas.beginText();
+	        try {
+	            canvas.setFontAndSize(PdfFontFactory.createFont(FontConstants.HELVETICA), 12);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	        canvas.moveText(34, 803);
+	    
+	        canvas.moveText(450, 0);
+	        canvas.showText(String.format("Page %d  ", pageNum));
+		pdfCanvas.release();
+	}
 }

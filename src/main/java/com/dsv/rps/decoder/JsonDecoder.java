@@ -17,8 +17,8 @@ public class JsonDecoder {
 		
 		try {
 			System.out.println("READING ...");
-			String json = Files.readString(Paths.get("C:\\Users\\didie\\Desktop\\test rps\\sample.json"), StandardCharsets.UTF_8);
-
+	//		String json = Files.readString(Paths.get("C:\\Users\\didie\\Desktop\\test rps\\sample.json"), StandardCharsets.UTF_8);
+			String json ="";
 			System.out.println("PARSING ...");
 			Object document = Configuration.defaultConfiguration().jsonProvider().parse(json);
 	
@@ -61,9 +61,9 @@ public class JsonDecoder {
 			byte[] decoded = Base64.getDecoder().decode(txtfile.getBytes("UTF-8"));
 			System.out.println(" txt file décodé :" + new String(decoded, StandardCharsets.UTF_8));
 			
+			String pgpfile = null;
 			
-			
-			String pgpfile = Files.readString(Paths.get("C:\\Users\\didie\\Desktop\\test rps\\pgp.txt"), StandardCharsets.UTF_8);
+		//	String pgpfile = Files.readString(Paths.get("C:\\Users\\didie\\Desktop\\test rps\\pgp.txt"), StandardCharsets.UTF_8);
 			System.out.println("pgpfile : " + pgpfile);
 			byte[] bytes = pgpfile.getBytes("UTF-8");
 			String encoded = Base64.getEncoder().encodeToString(bytes);

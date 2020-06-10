@@ -7,6 +7,23 @@ public class BusinessPartner {
 	private String adress3;
 	private String adress4; 
 	private String name;
+	
+	
+	
+	
+	public BusinessPartner()
+	{
+		adress1a="";
+		adress1b="";
+		adress2="";
+		adress3="";
+		adress4="";
+		name="";
+	}
+	
+	
+	
+	
 	public String getName() {
 		return name;
 	}
