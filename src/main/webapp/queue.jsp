@@ -1,20 +1,26 @@
 
 <%@page import="com.dsv.rps.action.QueueListenerUtils"%>
 <%@page import="com.dsv.rps.poc.servicebus.MyServiceBusQueueListener"%>
-<%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
 <%@page import="org.springframework.http.converter.StringHttpMessageConverter"%>
 
-<% if (QueueListenerUtils.startListening()) { %>
-Start listening queue
-<% } else %>
-Listener already started
+<a href='queue.jsp'>Refresh</a>
+<%
+String start = request.getParameter("start");
 
-<%QueueListenerUtils.startListening();%>
+if (start!= null && start.length()>0)
+{
+	QueueListenerUtils.startListening();
+}
 
-LAST MESSAGE READ FROM QUEUE : <%=StringEscapeUtils.escapeHtml4(QueueListenerUtils.LAST_MESSAGE)%>
-
+%>
 
  <form action = "queue.jsp" method = "GET">
-         <input type = "submit" value = "refresh" />
-      </form>
-      
+ 		<input type = "hidden" name = "start" value="p" />
+ 
+QUEUE STATE : 
+<% if (QueueListenerUtils.isStarted()) { %>
+	Queue started
+<% } else { %> Stopped
+ <input type = "submit" value = "Start Listening" />
+<% } %>
+</form>
