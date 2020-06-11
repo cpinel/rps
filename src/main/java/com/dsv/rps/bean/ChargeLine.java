@@ -12,7 +12,7 @@ public class ChargeLine {
 	public ChargeLine(String _rawline, int _lineindex) {
 		 
 		 
-		
+		rawLine=_rawline;
 		lineIndex = _lineindex;
 
 		try {
@@ -60,8 +60,8 @@ public class ChargeLine {
 	
 	
 	public void reconstructRawLine() {
- 
-		String svalue=Float.toString(value);
+		String svalue = String.format("%.2f",value); 
+		 
 		rawLine=rawLine.substring(0, rawLine.length()-svalue.length())+svalue;
 	}
 	
