@@ -25,7 +25,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.dsv.rps.bean.ChargeLine;
-import com.dsv.rps.beans.IOutputInstance;
 
 public class TxtAnalyzer {
 	private static Logger logger = Logger.getLogger(TxtAnalyzer.class.getName());

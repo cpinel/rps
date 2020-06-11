@@ -184,7 +184,7 @@ public class InputBean {
 		return null; // TODO
 	}
 	
-	public ArrayList<String> getPaymentTerms()
+	public ArrayList<String> getI132()
 	{
 		return null; // TODO
 	}
