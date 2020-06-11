@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -22,28 +24,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.dsv.rps.bean.ChargeLine;
-<<<<<<< HEAD:src/main/java/com/dsv/rps/parser/TxtAnalyzer.java
-import com.dsv.rps.beans.IOutputInstance;
-
-public class TxtAnalyzer {
-	private static Logger logger = Logger.getLogger(TxtAnalyzer.class.getName());
-	private static String byteExample = "IElEICAgICAgREVFUkUgIDIwMTUwMjEyICAxMzI1IFBSTlQgIFhQQU5QUAoxU09MRCBCWTogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIENPTU1FUkNJQUwgSU5WT0lDRSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBBR0UgICAgMQogICAgREVFUkUgJiBDT01QQU5ZCiAgICBXT1JMRFdJREUgTE9HSVNUSUNTIE9QRVJBVElPTlMgICAgICAgICAgICBJTlZPSUNFIE5POiAyMDAzIDM0MDEzNCBEQVRFOiAxMEZFQjE1IERFU1RJTkFUSU9OOiAyMDIwMDNQQQogICAgMzQwMCA4MFRIIFNUUkVFVCAgICAgICAgICAgICAgICAgICAgICAgICAgREVFUkUgT1JERVIgTk86IDIwMDM3NDkwMDMgICAgICAgICBEQVRFOiAwOUZFQjE1IFRZUEU6IFNOCiAgICBNT0xJTkUgICAgICAgIElMICA2MTI2NQogICAgVU5JVEVEIFNUQVRFUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ1VTVE9NRVIgT1JERVIgTk86CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBFWElUOiBNSUxBTiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNISVAgREFURTogMTBGRUIxNQogSU5WT0lDRSBUTzogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU0hJUE1FTlQgSUQ6IDIwMDMgIFRFU1QyMDIwMDNQQUFUICAgRk9SV0FSREVSOiBYUEFOUFAKICAgIEpPSE4gREVFUkUgQlJBU0lMIExUREEKICAgIFJVQSBTRVJHSU8gRkVSTkFOREVTIEJPUkdFUyBTT0FSRVMsCiAgICBESVNUUklUTyBJTkRVU1RSSUFMICAgICAgICAgICAgICAgICAgICAgICBQQVlNRU5UIFRFUk1TOgogICAgMTMwNTQtNzA5IENBTVBJTkFTIC0gU1AgICAgICAgICAgICAgICAgICAgICAgRFVFIFRIRSBGSVJTVCBEQVkgT0YgVEhFIEZPVVJUSCBNT05USCBGT0xMT1dJTkcgVEhFCiAgICBCUkFaSUwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBNT05USCBPRiBTSElQTUVOVCBPRiBHT09EUy4KICAgIENOUEo4OS42NzQuNzgyLzAwMTMtOTEKCiBTSElQIFRPOgogICAgSk9ITiBERUVSRSBCUkFTSUwgTFREQQogICAgUlVBIFNFUkdJTyBGRVJOQU5ERVMgQk9SR0VTIFNPQVJFUywKICAgIERJU1RSSVRPIElORFVTVFJJQUwKICAgIDEzMDU0LTcwOSBDQU1QSU5BUyAtIFNQICAgIEJSQVpJTAogICAgQ05QSjg5LjY3NC43ODIvMDAxMy05MSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBBTU9VTlQgSU4gVVNECgogU0hJUFBJTkcgTUFSS1M6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEZPQiBGQUJSSUNBICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDExLjE0CgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIElOTEFORCBGUkVJR0hUICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA3LjU5CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQUlSRlJFSUdIVAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEZPUldBUkRFUiBGRUVTCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSU5TVVJBTkNFCgoKCgoKCgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIERBUCBWSVJBQ09QQVMgQUlSUE9SVCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDE4LjczCgoKCgoKCgoKCgogICAgICAgMSBQQUNLQUdFKFMpICAgICAgMTQuOTY4IEdST1NTIEtHICAgICAgICAgIC4xOTEgTkVUIEtHCiAgICAgICAxIFBBQ0tBR0UoUykgICAgICAzMy4wMDAgR1JPU1MgTEJTICAgICAgICAgLjQyMSBORVQgTEJTICAgICAgICAgICAgIENVQklDIEZFRVQKMVNPTEQgQlk6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBDT01NRVJDSUFMIElOVk9JQ0UgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBQQUdFICAgIDIKICAgIERFRVJFICYgQ09NUEFOWQogICAgV09STERXSURFIExPR0lTVElDUyBPUEVSQVRJT05TICAgICAgICAgICAgSU5WT0lDRSBOTzogMjAwMyAzNDAxMzQgREFURTogMTBGRUIxNSBERVNUSU5BVElPTjogMjAyMDAzUEEKICAgIDM0MDAgODBUSCBTVFJFRVQgICAgICAgICAgICAgICAgICAgICAgICAgIERFRVJFIE9SREVSIE5POiAyMDAzNzQ5MDAzICAgICAgICAgREFURTogMDlGRUIxNSBUWVBFOiBTTgogICAgTU9MSU5FICAgICAgICBJTCAgNjEyNjUgICAgICAgICAgICAgICAgICAgRVhJVDogTUlMQU4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBTSElQIERBVEU6IDEwRkVCMTUKICAgIFVOSVRFRCBTVEFURVMKCgogKDA1MDQgKSBHRU5FUkFMIExJQ0VOU0UgLSBOTFIKICAgICAgICAgVEhFU0UgQ09NTU9ESVRJRVMgV0VSRSBFWFBPUlRFRCBGUk9NIFRIRSBVTklURUQKICAgICAgICAgU1RBVEVTIElOIEFDQ09SREFOQ0UgV0lUSCBUSEUgRVhQT1JUIEFETUlOSVNUUkFUSU9OCiAgICAgICAgIFJFR1VMQVRJT05TLiAgRElWRVJTSU9OIENPTlRSQVJZIFRPIFUuUy4gTEFXIFBST0hJQklURUQuCgogKDA1OTEgKSBXRSBIRVJFQlkgQ0VSVElGWSBUSEFUIFRIRSBTVEFURU1FTlRTIEhFUkVJTiBBUkUgVFJVRSBBTkQKICAgICAgICAgQ09SUkVDVCBJTiBBTEwgUkVTUEVDVFMuCiAgICAgICAgIERFRVJFICYgQ09NUEFOWQoKICgwNjU4ICkgQUVTIFBPU1QgMzYyMzgyNTgwMDAgK0RPRQoKIFBBQ0tBR0UgTElTVDoKICAgICAgICAgICBDQVNFICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUEFDS0FHRSAgICAgR1JPU1MgICAgIE5FVCAgICAgICAgIERJTUVOU0lPTlMgICAgICAgIENVQklDCiAgICAgICAgICAgVFlQRSAgIFBBQ0tBR0UgREVTQ1JJUFRJT04gICAgICAgICAgIE5VTUJFUiAgICAgICBMQlMgICAgICBMQlMgICAgIExHVEggICBXRFRIICAgIEhHVCAgICBGRUVUCgogICAgICAgICAgIENUTiAgICBDQVJUT04gICAgICAgICAgICAgICAgICAgICAgICBDNTI2MzMgICAgIDMzLjAwMCAgICAgICAuNDIxICAgMjEwIFggICAxMCBYCjFTSElQUEVEIEJZOiAgICAgICAgICAgICAgICAgICAgICAgSU5WT0lDRSBOTzogMjAwMyAzNDAxMzQgREFURTogMTBGRUIxNSBERVNUSU5BVElPTjogMjAyMDAzUEEgICBQQUdFICAgIDMKICAgIERFRVJFICYgQ09NUEFOWSAgICAgICAgICAgICAgICAgICAgICBERUVSRSBPUkRFUiBOTzogMjAwMzc0OTAwMyAgREFURTogMDlGRUIxNSBUWVBFOiBTTgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIENVU1RPTUVSIE9SREVSIE5POgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNISVBNRU5UIElEOiAyMDAzICBURVNUMjAyMDAzUEFBVCAgIExJQ0VOU0UgTk86CgogICAgICAgICAgICAgICAgICAgICBDICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFAgICAgICAgICAgICAgICAgICAgICBVTklUICAgICBOICBFWFRFTkRFRCAgVgogICAgUEFSVCAgICAgUEFDS0FHRSBTICBQICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNISVAgIEsgICBPUkQgICBFWFRFTkRFRCAgICBQUklDRSAgICBFICAgUFJJQ0UgICAgQQogICBOVU1CRVIgICAgTlVNQkVSICBPICBUICAgICAgICAgREVTQ1JJUFRJT04gICAgICAgICAgIFFUWSAgIEcgICBRVFkgICAgTkVUIEtHICAgICAgVVNEICAgICBUICAgIFVTRCAgICAgVAoKIFJFNjk1ODEgICAgICBDNTI2MzMgVVMgICBUSEVSTU9TVEFUICAgICAgICAgICAgICAgICAgICAgMiAgICAgICAgMiAgICAgICAuMTkxICAgICAgNS41NyAgICAgICAgICAxMS4xNAoKIFRPVEFMUyBGT1IgT1JERVIgMjAwMzc0OTAwMyAgICAgICAgIDEgVE9UQUwgTElORSBJVEVNUyAgICAgICAgICAgICAgICAgIC4xOTEgICAgICAgICAgICAgICAgICAgIDExLjE0CgoxU0hJUFBFRCBCWTogICAgICAgICAgICAgICAgICAgICAgICAgIEVYUE9SVCBQQVJUUyBQQUNLSU5HIExJU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUEFHRSAgICA0CiAgICAgICBERUVSRSAmIENPTVBBTlkKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIElOVk9JQ0UgTk86IDIwMDMgMzQwMTM0ICAxMEZFQjE1IERFU1RJTkFUSU9OOiAyMDIwMDNQQQogSU5WT0lDRSBUTzogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRVhJVDogTUlMQU4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBTSElQIERBVEU6IDEwRkVCMTUKICAgICAgIEpPSE4gREVFUkUgQlJBU0lMIExUREEgICAgICAgICAgICAgICAgIFNISVBNRU5UIElEOiAyMDAzICBURVNUMjAyMDAzUEFBVCAgIEZPUldBUkRFUjogWFBBTlBQCiAgICAgICBSVUEgU0VSR0lPIEZFUk5BTkRFUyBCT1JHRVMgU09BUkVTLAoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIERFRVJFCiAgICBQQUNLQUdFICAgICAgUEFSVCAgICAgICAgU0hJUCAgICAgIFMgIFAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBPUkRFUiAgICAgQ1VTVE9NRVIgICAgICAgIEJJTgogICAgTlVNQkVSICAgICAgTlVNQkVSICAgICAgIFFUWSAgIEJORCBPICBEICAgICAgIERFU0NSSVBUSU9OICAgICAgICAgICAgTlVNQkVSICBPUkRFUiBOVU1CRVIgICAgTE9DQVRJT04KCiAgICBDNTI2MzMgICBSRTY5NTgxICAgICAgICAgICAgIDIgICAgIFVTICAgVEhFUk1PU1RBVCAgICAgICAgICAgICAgICAgICA0OTAwMyAgICAgICAgICAgICAgICAgRTM4N0EwMUIKCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ0FTRSAgICAgICBESU1FTlNJT05TIChNTSkgICAgICBHUk9TUyAgIE5FVCAgIENVQklDCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgVFlQRSAgIExHVEggICBXRFRIICAgSEdUICAgICAgICAgICBMQlMgIExCUyAgIEZFRVQKCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ1ROICAgICAyMTAgICAgIDEwICAgICAgICAgICAzMy4wMDAgICAgICAgLjQyMQoKCiBUT1RBTFMgRk9SIENPTU1FUkNJQUwgSU5WT0lDRSAyMDAzIDM0MDEzNCAgIExJTkUgSVRFTVMgICAgIDEgICAgICAgR1JPU1MgTEJTICAgICAgMzMuMDAwCgoKICAgICAgICAgICAgICAgICAgICAgICAgQ0FTRQogICAgICAgICAgICAgICAgIFFUWSAgICBUWVBFICAgIFBBQ0tBR0UgREVTQ1JJUFRJT04KCiAgICAgICAgICAgICAgICAgICAgMSAgICBDVE4gICAgIENBUlRPTgo=";
-
-	
-	private Map<String, String> headerinfo = new HashMap<String, String>();
-	private List<ChargeLine> chargelines = new ArrayList<ChargeLine>();
-	private List<String> lines = new ArrayList<String>();
-	private List<Integer> pageindex = new ArrayList<Integer>();
-
-
-	public void display()
-	{
-		for (Map.Entry<String, String> entry : headerinfo.entrySet()) {
-			System.out.println(entry.getKey() + ":" + entry.getValue());
-		}
-		
-	}
-=======
 import com.dsv.rps.bean.Invoice;
 
 public class TextBuilder {
@@ -55,7 +35,6 @@ public class TextBuilder {
 
 	private Invoice invoice = new Invoice();
 
->>>>>>> 1361698c4859e92c004a1bf55b54743a3eef36bf:src/main/java/com/dsv/rps/parser/TextBuilder.java
 	public List<Integer> getPageindex() {
 		return pageindex;
 	}
@@ -72,15 +51,7 @@ public class TextBuilder {
 		this.lines = lines;
 	}
 
-<<<<<<< HEAD:src/main/java/com/dsv/rps/parser/TxtAnalyzer.java
-	public TxtAnalyzer() {
-
-		Properties conf = new Properties();
-		InputStream inputStream = null;
-		try {
-=======
 	public TextBuilder() {
->>>>>>> 1361698c4859e92c004a1bf55b54743a3eef36bf:src/main/java/com/dsv/rps/parser/TextBuilder.java
 
 		try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("rps.properties");) {
 
@@ -244,8 +215,6 @@ public class TextBuilder {
 
 				// line 4
 
-<<<<<<< HEAD:src/main/java/com/dsv/rps/parser/TxtAnalyzer.java
-=======
 				// get DeerOrder No
 				beginIdx = lines.get(4).indexOf("DEERE ORDER NO:") + 15;
 				endIdx = lines.get(4).indexOf("DATE:");
@@ -271,14 +240,13 @@ public class TextBuilder {
 				if (beginIdx >= 0)
 					invoice.setShipmentId(lines.get(8).substring(beginIdx, endIdx).trim());
 
->>>>>>> 1361698c4859e92c004a1bf55b54743a3eef36bf:src/main/java/com/dsv/rps/parser/TextBuilder.java
 			}
 		} catch (Exception ex) {
 		}
-		System.out.println("INVOICE::::" + invoice.toString());
+		System.out.println("[INVOICE]" + invoice.toString());
 	}
 
-	public void findchargeableLines() {
+	public void extractChargeLines() {
 		// SHIPPING MARKS:
 		int lineIndex = 0, beginIndex = 0;
 		boolean firstchargeDetected = false;
@@ -316,11 +284,7 @@ public class TextBuilder {
 		int i = 0;
 		String[] splitted = decodefile.split("\\r?\\n");
 		for (String element : splitted) {
-<<<<<<< HEAD:src/main/java/com/dsv/rps/parser/TxtAnalyzer.java
-			//System.out.println("$$$" + element);
-=======
 
->>>>>>> 1361698c4859e92c004a1bf55b54743a3eef36bf:src/main/java/com/dsv/rps/parser/TextBuilder.java
 			lines.add(element);
 			if (element.contains("PAGE"))
 				pageindex.add(new Integer(i));
@@ -361,94 +325,58 @@ public class TextBuilder {
 
 	public static void main(String[] args) {
 
-<<<<<<< HEAD:src/main/java/com/dsv/rps/parser/TxtAnalyzer.java
-		TxtAnalyzer t = new TxtAnalyzer();
-		/*
-		String firstmatch = t.listFilesForFolder(new File("C:\\Users\\claude.pinel\\docs\\rps"));
-=======
-		TextBuilder t = new TextBuilder();
-		// String firstmatch = t.listFilesForFolder(new
-		// File("C:\\Users\\claude.pinel\\docs\\rps"));
->>>>>>> 1361698c4859e92c004a1bf55b54743a3eef36bf:src/main/java/com/dsv/rps/parser/TextBuilder.java
-		// System.out.println(firstmatch);
-		// String myfile= t.readFile(decodefile);
+		TextBuilder textBuilder = new TextBuilder();
+	 
 
 		Path currentRelativePath = Paths.get("");
 		String s = currentRelativePath.toAbsolutePath().toString();
 		System.out.println("Current relative path is: " + s);
-<<<<<<< HEAD:src/main/java/com/dsv/rps/parser/TxtAnalyzer.java
-*/
-		String decodefile = t.decodeFile64(TxtAnalyzer.byteExample.getBytes());
-=======
 
-		String decodefile = t.decodeFile64(TextBuilder.byteExample.getBytes());
->>>>>>> 1361698c4859e92c004a1bf55b54743a3eef36bf:src/main/java/com/dsv/rps/parser/TextBuilder.java
-		t.parseContent(decodefile);
+		String decodefile = textBuilder.decodeFile64(TextBuilder.byteExample.getBytes());
+		textBuilder.parseContent(decodefile);
 
 		// init line
 
-		for (Integer line : t.getPageindex()) {
+		for (Integer line : textBuilder.getPageindex()) {
 
-			//System.out.println("page index" + line);
+			System.out.println("page index" + line);
 
 		}
 
-		t.extractHeaderInfo();
+		textBuilder.extractHeaderInfo();
 		try {
 			// this method extracts the charges , with line index , text and eventually
 			// amount, value will be set by 0
-			t.findchargeableLines();
-<<<<<<< HEAD:src/main/java/com/dsv/rps/parser/TxtAnalyzer.java
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-	
-	public void updateChargeLineWithValue( String chargeLineText, Float value)
-	{
-		// once we get the charges this part is reconstructing the text file with the values from the charge lines
-		for (ChargeLine chargeline : this.getChargelines())
-		{
-			if (chargeline.getText().equals(chargeLineText))
-			{
-				chargeline.setValue(value);
-				logger.info("CHARGE LINE UPDATED: " + chargeline.getText() + " : " + chargeline.toString());
-				chargeline.reconstructRawLine();
-
-				int id = chargeline.getLineIndex();
-				this.getLines().set(id, chargeline.getRawLine());
-			}
-=======
+			textBuilder.extractChargeLines();
 			// once we get the charges this part is reconstructing the text file with the
 			// values from the charge lines
 
-			/// lookup for AIRFREIGHT
+			/// lookup for AIRFREIGHT and inject test
 
-			Integer lineIndex = t.getInvoice().getChargeLinesIdx().get("AIRFREIGHT");
-			ChargeLine airFreightCharge = t.getInvoice().getChargeLines().get(lineIndex.intValue());
+			Integer lineIndex = textBuilder.getInvoice().getChargeLinesIdx().get("AIRFREIGHT");
+			ChargeLine airFreightCharge = textBuilder.getInvoice().getChargeLines().get(lineIndex.intValue());
 			airFreightCharge.setValue(new Float(34));
 
 			logger.info("ENTER AIRFREIGHT:" + lineIndex);
-
-			Integer lineIndex2 = t.getInvoice().getChargeLinesIdx().get("FORWARDER FEES");
-			ChargeLine forwarderCharge = t.getInvoice().getChargeLines().get(lineIndex2.intValue());
+			/// lookup for FORWARDER FEES and inject test
+			Integer lineIndex2 = textBuilder.getInvoice().getChargeLinesIdx().get("FORWARDER FEES");
+			ChargeLine forwarderCharge = textBuilder.getInvoice().getChargeLines().get(lineIndex2.intValue());
 			forwarderCharge.setValue(new Float(77));
 
 			logger.info("ENTER FORWARDER FEES:" + lineIndex2);
 
-			t.reCalculateAndReConstructChargeLines();
+			textBuilder.reCalculateAndReConstructChargeLines();
 
-			for (String line : t.getLines()) {
+			for (String line : textBuilder.getLines()) {
 
 				logger.info(line);
 
 			}
 
-			logger.info(t.getInvoice().toString());
+			logger.info(textBuilder.getInvoice().toString());
 			// String xmlfile = readFile("c:/temp/HWAYBL_I-AHR.xml");
 		} catch (Exception ex) {
 			ex.printStackTrace();
->>>>>>> 1361698c4859e92c004a1bf55b54743a3eef36bf:src/main/java/com/dsv/rps/parser/TextBuilder.java
 		}
 
 	}
