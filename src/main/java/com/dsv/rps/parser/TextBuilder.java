@@ -243,10 +243,10 @@ public class TextBuilder {
 			}
 		} catch (Exception ex) {
 		}
-		System.out.println("INVOICE::::" + invoice.toString());
+		System.out.println("[INVOICE]" + invoice.toString());
 	}
 
-	public void findchargeableLines() {
+	public void extractChargeLines() {
 		// SHIPPING MARKS:
 		int lineIndex = 0, beginIndex = 0;
 		boolean firstchargeDetected = false;
@@ -325,58 +325,55 @@ public class TextBuilder {
 
 	public static void main(String[] args) {
 
-		TextBuilder t = new TextBuilder();
-		// String firstmatch = t.listFilesForFolder(new
-		// File("C:\\Users\\claude.pinel\\docs\\rps"));
-		// System.out.println(firstmatch);
-		// String myfile= t.readFile(decodefile);
+		TextBuilder textBuilder = new TextBuilder();
+	 
 
 		Path currentRelativePath = Paths.get("");
 		String s = currentRelativePath.toAbsolutePath().toString();
 		System.out.println("Current relative path is: " + s);
 
-		String decodefile = t.decodeFile64(TextBuilder.byteExample.getBytes());
-		t.parseContent(decodefile);
+		String decodefile = textBuilder.decodeFile64(TextBuilder.byteExample.getBytes());
+		textBuilder.parseContent(decodefile);
 
 		// init line
 
-		for (Integer line : t.getPageindex()) {
+		for (Integer line : textBuilder.getPageindex()) {
 
 			System.out.println("page index" + line);
 
 		}
 
-		t.extractHeaderInfo();
+		textBuilder.extractHeaderInfo();
 		try {
 			// this method extracts the charges , with line index , text and eventually
 			// amount, value will be set by 0
-			t.findchargeableLines();
+			textBuilder.extractChargeLines();
 			// once we get the charges this part is reconstructing the text file with the
 			// values from the charge lines
 
-			/// lookup for AIRFREIGHT
+			/// lookup for AIRFREIGHT and inject test
 
-			Integer lineIndex = t.getInvoice().getChargeLinesIdx().get("AIRFREIGHT");
-			ChargeLine airFreightCharge = t.getInvoice().getChargeLines().get(lineIndex.intValue());
+			Integer lineIndex = textBuilder.getInvoice().getChargeLinesIdx().get("AIRFREIGHT");
+			ChargeLine airFreightCharge = textBuilder.getInvoice().getChargeLines().get(lineIndex.intValue());
 			airFreightCharge.setValue(new Float(34));
 
 			logger.info("ENTER AIRFREIGHT:" + lineIndex);
-
-			Integer lineIndex2 = t.getInvoice().getChargeLinesIdx().get("FORWARDER FEES");
-			ChargeLine forwarderCharge = t.getInvoice().getChargeLines().get(lineIndex2.intValue());
+			/// lookup for FORWARDER FEES and inject test
+			Integer lineIndex2 = textBuilder.getInvoice().getChargeLinesIdx().get("FORWARDER FEES");
+			ChargeLine forwarderCharge = textBuilder.getInvoice().getChargeLines().get(lineIndex2.intValue());
 			forwarderCharge.setValue(new Float(77));
 
 			logger.info("ENTER FORWARDER FEES:" + lineIndex2);
 
-			t.reCalculateAndReConstructChargeLines();
+			textBuilder.reCalculateAndReConstructChargeLines();
 
-			for (String line : t.getLines()) {
+			for (String line : textBuilder.getLines()) {
 
 				logger.info(line);
 
 			}
 
-			logger.info(t.getInvoice().toString());
+			logger.info(textBuilder.getInvoice().toString());
 			// String xmlfile = readFile("c:/temp/HWAYBL_I-AHR.xml");
 		} catch (Exception ex) {
 			ex.printStackTrace();
