@@ -10,4 +10,9 @@ public class Constants { /* not mandatory for webapp, onlw when running as Java 
 
 	
 	public static int ROLLING_LOGS_MAX_ROWS = Integer.parseInt(new Config().getConfigValue("ROLLING_LOGS_MAX_ROWS"));
+	
+	
+	
+	
+	public static final String MY_TEST_FILE = "C:\\Users\\didie\\Desktop\\test rps\\SHSV0000018.xml";
 }

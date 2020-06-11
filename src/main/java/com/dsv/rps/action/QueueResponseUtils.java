@@ -1,14 +1,9 @@
 package com.dsv.rps.action;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
 
 import com.dsv.rps.logging.LogGroup;
 import com.dsv.rps.logging.RollingLogs;

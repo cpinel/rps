@@ -76,7 +76,7 @@ public class QueueSenderUtils {
  static CompletableFuture<Void> sendMessagesAsync()
  {
         StringBuilder contentBuilder = new StringBuilder();
-        try (Stream<String> stream = Files.lines( Paths.get("C:\\Users\\didie\\Desktop\\test rps\\sample.xml.txt"), StandardCharsets.UTF_8)) 
+        try (Stream<String> stream = Files.lines( Paths.get(Constants.MY_TEST_FILE), StandardCharsets.UTF_8)) 
         {
             stream.forEach(s -> contentBuilder.append(s).append("\n"));
         }

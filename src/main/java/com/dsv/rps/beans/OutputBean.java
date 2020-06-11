@@ -37,9 +37,6 @@ public class OutputBean {
 	public List<Warning> getWarnings() {
 		return warnings;
 	}
-	public void setWarnings(List<Warning> warnings) {
-		this.warnings = warnings;
-	}
 	
 	public void addError(Error error)
 	{
@@ -48,4 +45,10 @@ public class OutputBean {
 		errors.add(error);
 	}
 	
+	public void addWarning(Warning warning)
+	{
+		if (warnings == null)
+			warnings = new ArrayList<Warning>();
+		warnings.add(warning);
+	}
 }

@@ -63,9 +63,8 @@ public class ChargeLine {
  
 		String svalue=Float.toString(value);
 		rawLine=rawLine.substring(0, rawLine.length()-svalue.length())+svalue;
-		
 	}
-
+	
 	public String getRawLine() {
 		return rawLine;
 	}
