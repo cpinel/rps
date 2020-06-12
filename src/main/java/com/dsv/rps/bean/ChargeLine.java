@@ -7,7 +7,7 @@ public class ChargeLine {
 	String rawLine = "";
 	int lineIndex = -1;
 	private String text = "";
-	private Float value;
+	private float value;
 
 	public ChargeLine(String _rawline, int _lineindex) {
 		 
@@ -36,7 +36,13 @@ public class ChargeLine {
 		reconstructRawLine();
 		logger.info("["+rawLine+"]");
 	}
+	public ChargeLine(  String _text, Float _value) {
+		rawLine = "";
+		lineIndex = -1;
+		text = _text;
+		value = _value;
 
+	}
 	public ChargeLine(String _rawline, int _lineindex, String _text, Float _value) {
 		rawLine = _rawline;
 		lineIndex = _lineindex;
@@ -89,11 +95,11 @@ public class ChargeLine {
 		this.text = text;
 	}
 
-	public Float getValue() {
+	public float getValue() {
 		return value;
 	}
 
-	public void setValue(Float value) {
+	public void setValue(float value) {
 		this.value = value;
 	}
 
