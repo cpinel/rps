@@ -3,6 +3,7 @@ package com.dsv.rps.beans;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class InputBean {
 
@@ -14,14 +15,27 @@ public class InputBean {
 	private Double invoiceCW;
 	private Double hawbCW;
 	
+	private String shipmentId;
+	
 	private HashMap<String,EDICharge> ediCharges;
 	private String ediCurrency;
 	
 	private HAWBCharge freightHAWBCharge;
 	private HashMap<String,HAWBCharge> otherHAWBCharges;
 	
+	private List<String> paymentTerms;
 	
 	private List<Case> cases;
+	
+	private int legsCount;
+	
+	public int getLegsCount() {
+		return legsCount;
+	}
+
+	public void setLegCount(int i){
+		legsCount = i;
+	}
 
 	public String getInvoiceId() {
 		return invoiceId;
@@ -44,6 +58,9 @@ public class InputBean {
 	}
 
 
+	public void setShipmentId(String shipmentId) {
+		this.shipmentId = shipmentId;
+	}
 
 	public void setHawbCW(Double hawbCW) {
 		this.hawbCW = hawbCW;
@@ -103,6 +120,11 @@ public class InputBean {
 			ediCharges = new HashMap<String, EDICharge>();
 		return ediCharges.get(key);
 	}
+	
+	public Set<String> getEdiChargesKeys()
+	{
+		return ediCharges.keySet();
+	}
 
 	public void addEdiCharge(EDICharge ediCharge)
 	{
@@ -150,10 +172,16 @@ public class InputBean {
 			{
 				res += "\nOther Freight Charge " + charge.getCode() + " : " + charge.getText() + " = " + charge.getValue();
 			}
-
 		
+		res += "\nStages count : " + legsCount; 
+			
 		return res;
 		
+	}
+	
+	public void addPaymentTerm(String s)
+	{
+		getPaymentTerms().add(s);
 	}
 	
 	// see COM code, for PDF
@@ -179,13 +207,21 @@ public class InputBean {
 		return getHawb();
 	}
 	
-	public ArrayList<String> getPaymentTerms()
+	public List<String> getPaymentTerms()
 	{
-		return null; // TODO
+		if (paymentTerms==null)
+			paymentTerms = new ArrayList<String>();
+		return paymentTerms;
 	}
 	
 	public ArrayList<String> getI132()
 	{
 		return null; // TODO
+	}
+	
+	// see COM code, for PDF
+	public String getShipentId()
+	{
+		return shipmentId;
 	}
 }

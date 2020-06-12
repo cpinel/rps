@@ -8,16 +8,33 @@ import com.dsv.rps.logging.Warning;
 
 public class OutputBean {
 
-	private String uuid;
+	private String orderNumber;
+	private String invoiceNumber;
 	private String binaryFile;
 	private boolean pdf;
 	private List<Error> errors;
 	private List<Warning> warnings;
-	public String getUuid() {
-		return uuid;
+	
+	private List<EDICharge> chargesToComplete;
+	
+	
+	public String getOrderNumber() {
+		return orderNumber;
 	}
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
+	}
+	public void setErrors(List<Error> errors) {
+		this.errors = errors;
+	}
+	public void setWarnings(List<Warning> warnings) {
+		this.warnings = warnings;
 	}
 	public String getBinaryFile() {
 		return binaryFile;
@@ -51,4 +68,15 @@ public class OutputBean {
 			warnings = new ArrayList<Warning>();
 		warnings.add(warning);
 	}
+	public List<EDICharge> getChargesToComplete() {
+		if (chargesToComplete == null)
+			chargesToComplete = new ArrayList<EDICharge>();
+		return chargesToComplete;
+	}
+	public void addChargeToComplete(EDICharge chargeToComplete)
+	{
+		getChargesToComplete().add(chargeToComplete);
+	}
+	
+	
 }

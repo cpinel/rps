@@ -5,6 +5,7 @@ public class EDICharge {
 	private String code;
 	private String text;
 	private Double value;
+	private Double updatedValue;
 
 	public EDICharge(String code,String text, Double value)
 	{
@@ -25,5 +26,16 @@ public class EDICharge {
 		return value;
 	}
 	
+	public void updateValue(double newvalue)
+	{
+		this.updatedValue = newvalue;
+	}
+	public Double getUpdatedValue()
+	{
+		if (updatedValue != null)
+			return updatedValue;
+		
+		return value;
+	}
 	
 }

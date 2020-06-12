@@ -239,6 +239,14 @@ public class RpsProcess {
 							}
 						}
 					}
+					else if (!StringUtils.isNull(code) && code.startsWith(CW1XMLPath.PAYMENT_TERMS_REFERENCE_TYPE))
+					{
+						ib.addPaymentTerm(value);
+					}
+					else if (!StringUtils.isNull(code) && code.startsWith(CW1XMLPath.SHIPMENT_ID))
+					{
+						ib.setShipmentId(value);
+					}
 				}
 				
 			}
@@ -301,6 +309,22 @@ public class RpsProcess {
 			ob.addError(Error.EDI_CHARGE);
 		}
 		
+		
+		try {
+			XPathExpression transportExpr = path.compile(CW1XMLPath.TRANSPORT_STAGE);
+			NodeList transportstageNodes = (NodeList)transportExpr.evaluate(root, XPathConstants.NODESET);
+			
+			ib.setLegCount(transportstageNodes.getLength());
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			ob.addError(Error.NO_TRANSPORT_STAGE);
+		}
+		
+		
+		
+		
 		System.out.println(ib);
 		
 		System.out.println("INPUTBEAN IS COMPLETED WITH XML STUFF....");
@@ -345,11 +369,152 @@ public class RpsProcess {
 		// do all calculations that allow to complete the ob with data available in ib
 		
 		System.out.println("DOING CALCULATIONS AND COMPLETING OUTPUTBEAN....");
+		
+		EDICharge a320 = ib.getEdiCharge("A320"); // air freight
+		EDICharge d140 = ib.getEdiCharge("D140"); // forwarding fees
+		
+		double F = 0.0;
+		boolean fMissing = false;
+		try
+		{
+			F = ib.getFreightHAWBCharge().getValue() * ib.getInvoiceCW() / ib.getHawbCW();
+		}
+		catch ( Exception e)
+		{
+			fMissing = true;
+		}
+		double AC = 0.0;
+		boolean aCMissing = false;
+		try
+		{
+			for (HAWBCharge hawbCharge: ib.getOtherHAWBCharges().values())
+			{
+				AC = AC + hawbCharge.getValue().doubleValue();
+			}
+			AC = AC * ib.getInvoiceCW() / ib.getHawbCW();
+		}
+		catch (Exception e)
+		{
+			aCMissing = true;
+		}
+		
+		
+		if (a320 == null)
+		{
+			if (d140 == null)
+			{
+				// do nothing
+			}
+			else if (d140.getValue() == null || d140.getValue().doubleValue() == 0.0)
+			{
+				if (fMissing)
+					ob.addError(Error.NO_FREIGHT_CHARGE);
+				if (aCMissing)
+					ob.addError(Error.NO_OTHER_CHARGE);
+				
+				d140.updateValue(F + AC);
+				ob.addChargeToComplete(d140);
+			}
+			else // d140 has a value
+			{
+				// do nothing, d140 keeps same value
+				ob.addChargeToComplete(d140);
+			}
+		}
+		else if (a320.getValue() == null || a320.getValue().doubleValue() == 0.0)
+		{
+			if (d140 == null)
+			{
+				if (fMissing)
+					ob.addError(Error.NO_FREIGHT_CHARGE);
+				if (aCMissing)
+					ob.addError(Error.NO_OTHER_CHARGE);
+				
+				a320.updateValue(F + AC);
+				ob.addChargeToComplete(a320);
+			}
+			else if (d140.getValue() == null || d140.getValue().doubleValue() == 0.0)
+			{
+				if (fMissing)
+					ob.addError(Error.NO_FREIGHT_CHARGE);
+				if (aCMissing)
+					ob.addError(Error.NO_OTHER_CHARGE);
+				
+				d140.updateValue(AC);
+				a320.updateValue(F);
+				ob.addChargeToComplete(d140);
+				ob.addChargeToComplete(a320);
+			}
+			else // d140 has a value
+			{
+				if (fMissing)
+					ob.addError(Error.NO_FREIGHT_CHARGE);
+				
+				a320.updateValue(F);
+				ob.addChargeToComplete(a320);
+				ob.addChargeToComplete(d140);
+			}
+		}
+		else // a320 has a value
+		{
+			ob.addChargeToComplete(a320);
+			if (d140 == null)
+			{
+				// do nothing, a320 keeps same value
+			}
+			else if (d140.getValue() == null || d140.getValue().doubleValue() == 0.0)
+			{
+				if (aCMissing)
+					ob.addError(Error.NO_OTHER_CHARGE);
+				
+				d140.updateValue(AC);
+				ob.addChargeToComplete(d140);
+			}
+			else // d140 has a value
+			{
+				// do nothing, d140 keeps same value, a320 keeps same value
+				ob.addChargeToComplete(d140);
+			}
+		}
+		
+		EDICharge i138 = ib.getEdiCharge("I138");
+		if (i138 == null && i138.getValue() != null || i138.getValue().doubleValue() > 0.0)
+		{
+			ob.addChargeToComplete(i138);
+		}
+
+		// update other charges
+		for (String chargeCode:ib.getEdiChargesKeys())
+		{
+			if (!StringUtils.isInList(chargeCode, "I132","I138","D980","A320","D140"))
+			{
+				EDICharge charge = ib.getEdiCharge(chargeCode);
+				if (charge.getValue() != null && charge.getValue().doubleValue() > 0)
+				{
+					ob.addChargeToComplete(charge);
+				}
+			}
+		}
+		
+		//insurance
+		EDICharge d980 = ib.getEdiCharge("D980");
+		if (d980 != null && d980.getValue() != null || d980.getValue().doubleValue() > 0.0)
+		{
+			ob.addChargeToComplete(d980);
+		}
+		else // calculate insurance cost
+		{
+			// according to Bruno, no need to handle this case (see COM SFT table, *1.1 and factor based on target country
+		}
+		
+		
+		
+		
 	}
 	
 	private static String generateXMLOutput ( OutputBean ob)
 	{
 	      // TODO complete message with proper structure
-	      return "<RPSReply><ShipmentId>SHSV0000050</ShipmentId><code>OK</code><format>TXT</format><errors/><warnings><warning>Sum of line items weight is greater than shipment gros weight</warning></warnings><binaryFile>UGFuYWxwaW5hIEVjdWFkb3IgUy5BLjtQYW5hbHBpbmEgRWN1YWRvciBTLkEuOzE3OTA3MzAxNjYwMDE7MDE7MDAxOzAwMTswMDAwMDAxNTc7QXYuIDYgZGUgRGljaWVtYnJlIE4zMi0zMTIgeSBKZWFuIEIuIEJvdXNzaW5nYXVsdCBFZGlmaWNpbyBUNiwgUGlzbyA1LCBPZmljaW5hIDUwMzswOC8wNS8yMDIwO0F2ZW5pZGEgRWwgSW5jYSwgeSBBdmVuaWRhIEFtYXpvbmFzIDQwNiwgRTQtMTgxOzA1OTA7U0k7MDQ7O0hBTExJQlVSVE9OIExBVElOIEFNRVJJQ0EgU1JMOzE3OTE4NTE2MzYwMzI7MzEyLjAwOzAuMDA7W0lUMzswMDAwOzAuMDA7MDAwMDswLjAwXVtJVDI7MjszMTIuMDA7MTI7MjQuMDBdMC4wMDszMzYuMDA7RE9MQVI7W1BBRzIwOzMzNi4wMDswO0RpYXNdO1tERVRDQ0w7MDAwO0lNUE9SVCBDVVNUT01TIENMRUFSQU5DRSBDSEFSR0VTOzEuMDA7MjAwLjAwOzAuMDA7MjAwLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzI7MTI7MjAwLjAwOzI0LjAwMDBdO1tERVRMUkZMOzAwMDtSRUlNQlVSU0VNRU5UIFdBUkVIT1VTRSBGT1JLTElGVCBBTkQgT1RIRVIgRVFVSVBNRU5UOzEuMDA7MTEyLjAwOzAuMDA7MTEyLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzAuMDA7MDA7MC4wMDswLjAwXWVtYWlsQ2xpZW50ZT1OZWxzb24uTWVuZGV6QHBhbmFscGluYS5jb207Q09ESUdPSU5URVJOT1NBUD0wMDAwMDAxNTc7Q09ESUdPSU5URVJOT1NBUENMSUVOVEU9Njc5MDY4OTI7UkVGRVJFTkNFPTtIQVdCL0JMPVNBTzc1NTg4NDE=</binaryFile></RPSReply>";
+	      return "<RPSReply><OrderNumber>TESTE2EJL007C</OrderNumber><InvoiceNumber></InvoiceNumber><code>OK</code><format>TXT</format><errors/><warnings><warning>Sum of line items weight is greater than shipment gros weight</warning></warnings><binaryFile>UGFuYWxwaW5hIEVjdWFkb3IgUy5BLjtQYW5hbHBpbmEgRWN1YWRvciBTLkEuOzE3OTA3MzAxNjYwMDE7MDE7MDAxOzAwMTswMDAwMDAxNTc7QXYuIDYgZGUgRGljaWVtYnJlIE4zMi0zMTIgeSBKZWFuIEIuIEJvdXNzaW5nYXVsdCBFZGlmaWNpbyBUNiwgUGlzbyA1LCBPZmljaW5hIDUwMzswOC8wNS8yMDIwO0F2ZW5pZGEgRWwgSW5jYSwgeSBBdmVuaWRhIEFtYXpvbmFzIDQwNiwgRTQtMTgxOzA1OTA7U0k7MDQ7O0hBTExJQlVSVE9OIExBVElOIEFNRVJJQ0EgU1JMOzE3OTE4NTE2MzYwMzI7MzEyLjAwOzAuMDA7W0lUMzswMDAwOzAuMDA7MDAwMDswLjAwXVtJVDI7MjszMTIuMDA7MTI7MjQuMDBdMC4wMDszMzYuMDA7RE9MQVI7W1BBRzIwOzMzNi4wMDswO0RpYXNdO1tERVRDQ0w7MDAwO0lNUE9SVCBDVVNUT01TIENMRUFSQU5DRSBDSEFSR0VTOzEuMDA7MjAwLjAwOzAuMDA7MjAwLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzI7MTI7MjAwLjAwOzI0LjAwMDBdO1tERVRMUkZMOzAwMDtSRUlNQlVSU0VNRU5UIFdBUkVIT1VTRSBGT1JLTElGVCBBTkQgT1RIRVIgRVFVSVBNRU5UOzEuMDA7MTEyLjAwOzAuMDA7MTEyLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzAuMDA7MDA7MC4wMDswLjAwXWVtYWlsQ2xpZW50ZT1OZWxzb24uTWVuZGV6QHBhbmFscGluYS5jb207Q09ESUdPSU5URVJOT1NBUD0wMDAwMDAxNTc7Q09ESUdPSU5URVJOT1NBUENMSUVOVEU9Njc5MDY4OTI7UkVGRVJFTkNFPTtIQVdCL0JMPVNBTzc1NTg4NDE=</binaryFile></RPSReply>";
 	}
 }

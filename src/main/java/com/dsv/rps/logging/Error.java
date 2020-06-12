@@ -23,6 +23,10 @@ public enum Error {
 
 	HAWB_CHARGE_VALUE_WRONG_FORMAT("HAWB charge has a value which is not a number"),
 
+	NO_FREIGHT_CHARGE("No Freight Charge could be found in the file"),
+	NO_OTHER_CHARGE("No Other Charge could be found in the file"),
+	
+	NO_TRANSPORT_STAGE("No transport stage could be found in the file"),
 	;
 	
 	
