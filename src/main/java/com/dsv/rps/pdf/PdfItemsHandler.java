@@ -1,7 +1,5 @@
 package com.dsv.rps.pdf;
 
-import java.io.IOException;
-
 import com.dsv.rps.bean.BusinessPartner;
 import com.dsv.rps.bean.Invoice;
 import com.itextpdf.io.font.FontConstants;
@@ -30,7 +28,7 @@ import com.itextpdf.layout.layout.LayoutResult;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 
-public class MyPdfHeaderTableHandler implements IEventHandler {
+public class PdfItemsHandler implements IEventHandler {
 
 	protected Table headerTable;
 	protected Table leftSide;
@@ -43,7 +41,7 @@ public class MyPdfHeaderTableHandler implements IEventHandler {
  
 	
 	 
-	public MyPdfHeaderTableHandler(Document doc, Invoice invoice) {
+	public PdfItemsHandler(Document doc, Invoice invoice) {
 		try{defaultFont = PdfFontFactory.createFont(FontConstants.HELVETICA);
 		boldFont = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
 		}

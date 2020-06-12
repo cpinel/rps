@@ -15,7 +15,7 @@ import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.property.TextAlignment;
 
-public class MyPdfHeaderHandler implements IEventHandler {
+public class PdfPageNumberHandler implements IEventHandler {
 
 	protected String info;
 

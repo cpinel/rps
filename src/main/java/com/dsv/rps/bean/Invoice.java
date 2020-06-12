@@ -19,10 +19,12 @@ public class Invoice {
 	private String shipDate;
 	private Map<String, BusinessPartner> partners;
 	private List<Item> items;
-	private List<Package> packages;
-	 
+	private List<Packaging> packages;
+
+	// chargelines, for text version only
 	private List<ChargeLine> chargeLines;
-	private Map<String,Integer> chargeLinesIdx;
+	private Map<String, Integer> chargeLinesIdx;
+
 	public Invoice() {
 		date = "";
 		invoiceNo = "";
@@ -30,21 +32,19 @@ public class Invoice {
 		currency = "";
 		incoterms = "";
 		shipDate = "";
-		deereOrderNo="";
+		deereOrderNo = "";
 		exit = "";
 		shipmentId = "";
-		
-		
+
 		partners = new HashMap<String, BusinessPartner>();
 		items = new ArrayList<Item>();
-		packages = new ArrayList<Package>();
+		packages = new ArrayList<Packaging>();
 		paymentTerms = new ArrayList<String>();
-		
-		chargeLines= new ArrayList<ChargeLine>();
-		chargeLinesIdx= new HashMap<String, Integer>();
+
+		chargeLines = new ArrayList<ChargeLine>();
+		chargeLinesIdx = new HashMap<String, Integer>();
 	}
-	
-	
+
 	// used for pdf
 	public static Invoice getTest() {
 		Invoice inv = new Invoice();
@@ -85,7 +85,16 @@ public class Invoice {
 		paymentterms.add("term 1");
 		paymentterms.add("term 2");
 		inv.setPaymentTerms(paymentterms);
-
+		
+		  
+		 
+		ChargeLine chargeline1=new ChargeLine("AIRFREIGHT",Float.parseFloat("50.33"));
+		inv.getChargeLines().add(chargeline1);
+			ChargeLine chargeline2=new ChargeLine("INSURANCE FEE",Float.parseFloat("3.22"));
+			inv.getChargeLines().add(chargeline2);
+		
+		
+		
 		for (int i = 0; i < 20; i++) {
 			Item item1 = new Item();
 			item1.setCountryOfOrigin("US");
@@ -127,10 +136,27 @@ public class Invoice {
 			inv.getItems().add(item4);
 
 		}
+
+		for (int i = 0; i < 15; i++) {
+			Packaging pa1 = new Packaging();
+			pa1.setCaseNumber("CS123");
+			pa1.setHeight("100.00");
+			pa1.setLength("80.00");
+
+			pa1.setWidth("180.00");
+			inv.getPackaging().add(pa1);
+			
+			Packaging pa2 = new Packaging();
+			pa2.setCaseNumber("IF33");
+			pa2.setHeight("10.00");
+			pa2.setLength("40.00");
+
+			pa2.setWidth(" 80.00");
+			inv.getPackaging().add(pa2);
+		}
 		return inv;
 	}
 
-  
 	public String getInvoiceNo() {
 		return invoiceNo;
 	}
@@ -183,31 +209,25 @@ public class Invoice {
 		return deereOrderNo;
 	}
 
-
 	public void setDeereOrderNo(String deereOrderNo) {
 		this.deereOrderNo = deereOrderNo;
 	}
- 
 
 	public List<ChargeLine> getChargeLines() {
 		return chargeLines;
 	}
 
-
 	public void setChargeLines(List<ChargeLine> chargeLines) {
 		this.chargeLines = chargeLines;
 	}
-
 
 	public Map<String, Integer> getChargeLinesIdx() {
 		return chargeLinesIdx;
 	}
 
-
 	public void setChargeLinesIdx(Map<String, Integer> chargeLinesIdx) {
 		this.chargeLinesIdx = chargeLinesIdx;
 	}
-
 
 	public String getIncoterms() {
 		return incoterms;
@@ -249,23 +269,20 @@ public class Invoice {
 		this.items = items;
 	}
 
-	public List<Package> getPackages() {
+	public List<Packaging> getPackaging() {
 		return packages;
 	}
 
-	public void setPackages(List<Package> packages) {
+	public void setPackaging(List<Packaging> packages) {
 		this.packages = packages;
 	}
 
-	
-	public String toString()
-	{
-		StringBuilder sb=new StringBuilder();
-		sb.append("invoiceno=").append(this.invoiceNo).append(",date=").append(this.date).append(",deer order no=").append(this.deereOrderNo).append(",exit=").append(this.exit).append(", ship date=").append(this.shipDate).append(",shipment Id=").append(this.shipmentId);
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("invoiceNo=").append(this.invoiceNo).append(",date=").append(this.date).append(",deer Order No=")
+				.append(this.deereOrderNo).append(",exit=").append(this.exit).append(", ship Date=")
+				.append(this.shipDate).append(",shipment Id=").append(this.shipmentId);
 		return sb.toString();
-		
-		
-		
-		
+
 	}
 }
