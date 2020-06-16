@@ -16,7 +16,7 @@ public enum Error {
 	LINE_GW("No line found for Invoice"),
 	LINE_GW_FORMAT("Line Gross Weight for Invoice does not have expected format"),
 	
-	EDI_CHARGE_CURR("No currency sent bw EDI"),
+	EDI_CHARGE_CURR("No currency sent by EDI"),
 	EDI_CHARGE_VALUE_WRONG_FORMAT("EDI charge has a value which is not a number"),
 	
 	EDI_CHARGE("Could not extract EDI charges"),

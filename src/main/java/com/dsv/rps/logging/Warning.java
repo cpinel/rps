@@ -6,6 +6,7 @@ public enum Warning {
 	
 	HAWB_CHARGE_DETAILS_MISSING("HAWB charge could not be considred due to missing info"),
 	
+	NO_BUYER_ID ("No Buyer ID could be found in the XML file from CW1"),
 	
 	;
 	

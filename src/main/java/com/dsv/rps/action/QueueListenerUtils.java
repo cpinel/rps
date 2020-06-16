@@ -80,11 +80,11 @@ public class QueueListenerUtils {
 	                    String result = new String(body, UTF_8);
 	                    System.out.println("result " + (result.length()>100?(result.substring(0,100) + "..."):result));
 	                    RollingLogs.addItem("Now processing message id = "+message.getMessageId() + " : " + (result.length()>100?(result.substring(0,100) + "..."):result),LogGroup.PROCESS);
-	                    RpsProcess process = new RpsProcess();
+	                    RpsProcess rpsProcess = new RpsProcess();
 	                    
 	                    try
 	                    {
-	                    	QueueResponseUtils.sendMessagetoQueue(process.process(message));
+	                    	QueueResponseUtils.sendMessagetoQueue(rpsProcess.process(message));
 	                    }
 	                    catch (Exception e)
 	                    {

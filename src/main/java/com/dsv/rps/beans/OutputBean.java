@@ -10,6 +10,7 @@ public class OutputBean {
 
 	private String orderNumber;
 	private String invoiceNumber;
+	private String buyerId;
 	private String binaryFile;
 	private boolean pdf;
 	private List<Error> errors;
@@ -18,6 +19,12 @@ public class OutputBean {
 	private List<EDICharge> chargesToComplete;
 	
 	
+	public String getBuyerId() {
+		return buyerId;
+	}
+	public void setBuyerId(String buyerId) {
+		this.buyerId = buyerId;
+	}
 	public String getOrderNumber() {
 		return orderNumber;
 	}
@@ -78,5 +85,8 @@ public class OutputBean {
 		getChargesToComplete().add(chargeToComplete);
 	}
 	
-	
+	public String getFilename()
+	{
+		return orderNumber + (pdf?".pdf":".txt");
+	}
 }

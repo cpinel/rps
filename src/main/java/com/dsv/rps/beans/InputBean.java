@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import com.dsv.rps.utils.StringUtils;
+
 public class InputBean {
 
 	private String orderNo;
@@ -25,7 +27,9 @@ public class InputBean {
 	
 	private List<String> paymentTerms;
 	
-	private List<Case> cases;
+	private List<LineItem> lineItems;
+	
+	private ArrayList<Partner> partners;
 	
 	private int legsCount;
 	
@@ -96,15 +100,20 @@ public class InputBean {
 		this.orderNo = orderNo;
 	}
 
-	public List<Case> getCases() {
-		return cases;
+	public List<LineItem> getLineItems() {
+		if (lineItems == null)
+			lineItems = new ArrayList<LineItem>();
+		return lineItems;
 	}
 
-	public void setCases(List<Case> cases) {
-		this.cases = cases;
+	public void setLineItems(List<LineItem> lineItems) {
+		this.lineItems = lineItems;
 	}
 	
-
+	public void addLineItem ( LineItem item)
+	{
+		getLineItems().add(item);
+	}
 
 	public String getEdiCurrency() {
 		return ediCurrency;
@@ -224,4 +233,52 @@ public class InputBean {
 	{
 		return shipmentId;
 	}
+
+	public HashMap<String, EDICharge> getEdiCharges() {
+		return ediCharges;
+	}
+
+	public void setEdiCharges(HashMap<String, EDICharge> ediCharges) {
+		this.ediCharges = ediCharges;
+	}
+
+	public ArrayList<Partner> getPartners() {
+		if (partners==null)
+			partners = new ArrayList<Partner>();
+		return partners;
+	}
+
+	public void addPartner(Partner e ) {
+		getPartners().add(e);
+	}
+
+	public String getShipmentId() {
+		return shipmentId;
+	}
+
+	public void setOtherHAWBCharges(HashMap<String, HAWBCharge> otherHAWBCharges) {
+		this.otherHAWBCharges = otherHAWBCharges;
+	}
+
+	public void setPaymentTerms(List<String> paymentTerms) {
+		this.paymentTerms = paymentTerms;
+	}
+	
+	public Partner getPartner( Epartner epartner)
+	{
+		for (String code : epartner.getCodes())
+		{
+			for (Partner partner:getPartners())
+			{
+				if (code.equals(partner.getRole()))
+						return partner;
+			}
+		}
+		return null;
+	}
+
+	public void setLegsCount(int legsCount) {
+		this.legsCount = legsCount;
+	}
+	
 }

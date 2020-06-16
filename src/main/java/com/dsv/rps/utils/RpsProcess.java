@@ -25,11 +25,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.dsv.rps.beans.EDICharge;
+import com.dsv.rps.beans.Epartner;
 import com.dsv.rps.beans.HAWBCharge;
 import com.dsv.rps.beans.InputBean;
+import com.dsv.rps.beans.LineItem;
 import com.dsv.rps.beans.OutputBean;
+import com.dsv.rps.beans.Partner;
 import com.dsv.rps.logging.Error;
 import com.dsv.rps.logging.Warning;
+import com.dsv.rps.parser.TextBuilder;
 import com.dsv.rps.resources.Constants;
 import com.microsoft.azure.servicebus.IMessage;
 
@@ -47,7 +51,6 @@ public class RpsProcess {
 		if (ob.getErrors()!=null)
 		{
 			System.out.println(ob.getErrors().get(0).getText());
-			return;
 		}
 		
 		completeInputBeanWithTxtFileData(ib,ob);
@@ -65,8 +68,15 @@ public class RpsProcess {
 		
 		InputBean ib = validateXML(inputMessage, ob);
 		InputStream is = new ByteArrayInputStream(inputMessage.getBody());
-		buildInputBeanFromXMLMessage ( ib,is,ob);
-		doCalculations(ib,ob);
+		try
+		{
+			buildInputBeanFromXMLMessage ( ib,is,ob);
+			doCalculations(ib,ob);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		String outputXML = generateXMLOutput ( ob);
 		
 		return outputXML;
@@ -184,7 +194,7 @@ public class RpsProcess {
 			double invoiceweight = 0;
 			for (int i=1;i<=lineNodes.getLength();i++)
 			{
-				String lineweight = assignXMLPath(ib, ob, path, root,CW1XMLPath.LINE_GW.replace("%%%", ""+i), null);
+				String lineweight = assignXMLPath(ib, ob, path, root,CW1XMLPath.LINE_GROSS_WEIGHT.replace("%%%", ""+i), null);
 				try
 				{
 					invoiceweight = invoiceweight + Double.valueOf(lineweight);
@@ -193,6 +203,31 @@ public class RpsProcess {
 				{
 					ob.addError(Error.LINE_GW_FORMAT);
 				}
+				
+				LineItem item = new LineItem();
+				item.setCaseNumber(assignXMLPath(ib, ob, path, root,CW1XMLPath.LINE_CASE_NUMBER.replace("%%%", ""+i), null));
+				item.setItemDescription(assignXMLPath(ib, ob, path, root,CW1XMLPath.LINE_CASE_NUMBER.replace("%%%", ""+i), null));
+				item.setPartNumber(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_CASE_NUMBER.replace("%%%", ""+i), null));
+				item.setHSCode(null);
+				item.setCustomerOrderNumber(null);
+				item.setDeereOrderNumber(null);
+				item.setCountryOfOrigin(null);
+				item.setUnitPrice(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_UNIT_PRICE.replace("%%%", ""+i), null));
+				item.setQuantity(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_QUANTITY.replace("%%%", ""+i), null));
+				item.setWeight(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_GROSS_WEIGHT.replace("%%%", ""+i), null));
+				item.setValue(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_VALUE.replace("%%%", ""+i), null));
+				item.setCaseNumber(assignXMLPath(ib, ob, path, root,CW1XMLPath.LINE_CASE_NUMBER.replace("%%%", ""+i), null));
+				item.setLength(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_LENGTH.replace("%%%", ""+i), null));
+				item.setWidth(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_WIDTH.replace("%%%", ""+i), null));
+				item.setHeight(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_HEIGHT.replace("%%%", ""+i), null));
+				item.setGw(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_GROSS_WEIGHT.replace("%%%", ""+i), null));
+				item.setNetweight(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_NET_WEIGHT.replace("%%%", ""+i), null));
+				item.setType(assignXMLPath(ib, ob, path, root,CW1XMLPath.LINE_TYPE.replace("%%%", ""+i), null));
+				
+				
+				
+				ib.addLineItem(item);
+				
 			}
 			ib.setInvoiceCW(invoiceweight);
 		}
@@ -201,7 +236,7 @@ public class RpsProcess {
 			e.printStackTrace();
 			ob.addError(Error.LINE_GW);
 		}
-		if (ib.getHawbCW()!= null && ib.getInvoiceCW() !=null && ib.getHawbCW().doubleValue() > ib.getInvoiceCW().doubleValue())
+		if (ib.getHawbCW()!= null && ib.getInvoiceCW() !=null && ib.getHawbCW().doubleValue() < ib.getInvoiceCW().doubleValue())
 		{
 			ob.addWarning(Warning.INVOICE_WEIGHT_EXCEEDS_SHIPMENT_WEIGHT);
 		}
@@ -309,7 +344,7 @@ public class RpsProcess {
 			ob.addError(Error.EDI_CHARGE);
 		}
 		
-		
+		// Legs count
 		try {
 			XPathExpression transportExpr = path.compile(CW1XMLPath.TRANSPORT_STAGE);
 			NodeList transportstageNodes = (NodeList)transportExpr.evaluate(root, XPathConstants.NODESET);
@@ -323,12 +358,63 @@ public class RpsProcess {
 		}
 		
 		
+		//Partners
+		try {
+			XPathExpression lineExpr = path.compile(CW1XMLPath.PARTNERS);
+			NodeList partnerNodes = (NodeList)lineExpr.evaluate(root, XPathConstants.NODESET);
+			for (int i=1;i<=partnerNodes.getLength();i++)
+			{
+				Partner partner = new Partner();
+				partner.setId(assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_ID.replace("%%%", ""+i), null));
+				partner.setRole(assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_ROLE.replace("%%%", ""+i), null));
+				partner.setCAAD1(assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_NAME.replace("%%%", ""+i), null));
+				partner.setCAAD1A(assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_LINE1.replace("%%%", ""+i), null));
+				partner.setCAAD1B(assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_LINE2.replace("%%%", ""+i), null));
+				partner.setCAAD2(assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_CITY.replace("%%%", ""+i), null) + " " + assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_POSTCODE.replace("%%%", ""+i), null));
+				
+				String countryLine = "";
+				String country = assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_COUNTRY.replace("%%%", ""+i), null);
+				String state = assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_STATE.replace("%%%", ""+i), null);
+				String countryCode = assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_COUNTRYCODE.replace("%%%", ""+i), null);
+
+				if (!StringUtils.isNull(state))
+					countryLine = state + " - ";
+				if (!StringUtils.isNull(country))
+					countryLine += country;
+				else if (!StringUtils.isNull(countryCode))
+					countryLine += countryCode;
+				partner.setCAAD4(countryLine);
+				ib.addPartner(partner);
+				
+			}
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			ob.addError(Error.LINE_GW);
+		}
 		
 		
 		System.out.println(ib);
 		
 		System.out.println("INPUTBEAN IS COMPLETED WITH XML STUFF....");
 			
+	}
+	
+	private static Double assignDoubleXMLPath(InputBean ib,OutputBean ob, XPath path, Element root, String xmlpath,Error error)
+	{
+		String s = assignXMLPath(ib, ob, path, root, xmlpath, error);
+				
+		try
+		{
+			return Double.parseDouble(s);
+		}
+		catch (Exception e)
+		{
+			if (error != null)
+				ob.addError(error);
+			return null;
+		}
 	}
 	
 	private static String assignXMLPath(InputBean ib,OutputBean ob, XPath path, Element root, String xmlpath,Error error)
@@ -366,6 +452,17 @@ public class RpsProcess {
 	
 	private static void doCalculations ( InputBean ib, OutputBean ob)
 	{
+		ob.setOrderNumber(ib.getOrderNo());
+		ob.setInvoiceNumber(ob.getInvoiceNumber());
+		
+		if (ib.getPartner(Epartner.BUYER)!=null)
+		{
+			ob.setBuyerId(ib.getPartner(Epartner.BUYER).getId());
+		}
+		else
+		{
+			ob.addWarning(Warning.NO_BUYER_ID);
+		}
 		// do all calculations that allow to complete the ob with data available in ib
 		
 		System.out.println("DOING CALCULATIONS AND COMPLETING OUTPUTBEAN....");
@@ -478,7 +575,7 @@ public class RpsProcess {
 		}
 		
 		EDICharge i138 = ib.getEdiCharge("I138");
-		if (i138 == null && i138.getValue() != null || i138.getValue().doubleValue() > 0.0)
+		if (i138 != null && i138.getValue() != null && i138.getValue().doubleValue() > 0.0)
 		{
 			ob.addChargeToComplete(i138);
 		}
@@ -498,7 +595,7 @@ public class RpsProcess {
 		
 		//insurance
 		EDICharge d980 = ib.getEdiCharge("D980");
-		if (d980 != null && d980.getValue() != null || d980.getValue().doubleValue() > 0.0)
+		if (d980 != null && d980.getValue() != null && d980.getValue().doubleValue() > 0.0)
 		{
 			ob.addChargeToComplete(d980);
 		}
@@ -509,12 +606,97 @@ public class RpsProcess {
 		
 		
 		
+		TextBuilder txb = new TextBuilder();
+		String txtEncoded64 = "UGFuYWxwaW5hIEVjdWFkb3IgUy5BLjtQYW5hbHBpbmEgRWN1YWRvciBTLkEuOzE3OTA3MzAxNjYwMDE7MDE7MDAxOzAwMTswMDAwMDAxNTc7QXYuIDYgZGUgRGljaWVtYnJlIE4zMi0zMTIgeSBKZWFuIEIuIEJvdXNzaW5nYXVsdCBFZGlmaWNpbyBUNiwgUGlzbyA1LCBPZmljaW5hIDUwMzswOC8wNS8yMDIwO0F2ZW5pZGEgRWwgSW5jYSwgeSBBdmVuaWRhIEFtYXpvbmFzIDQwNiwgRTQtMTgxOzA1OTA7U0k7MDQ7O0hBTExJQlVSVE9OIExBVElOIEFNRVJJQ0EgU1JMOzE3OTE4NTE2MzYwMzI7MzEyLjAwOzAuMDA7W0lUMzswMDAwOzAuMDA7MDAwMDswLjAwXVtJVDI7MjszMTIuMDA7MTI7MjQuMDBdMC4wMDszMzYuMDA7RE9MQVI7W1BBRzIwOzMzNi4wMDswO0RpYXNdO1tERVRDQ0w7MDAwO0lNUE9SVCBDVVNUT01TIENMRUFSQU5DRSBDSEFSR0VTOzEuMDA7MjAwLjAwOzAuMDA7MjAwLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzI7MTI7MjAwLjAwOzI0LjAwMDBdO1tERVRMUkZMOzAwMDtSRUlNQlVSU0VNRU5UIFdBUkVIT1VTRSBGT1JLTElGVCBBTkQgT1RIRVIgRVFVSVBNRU5UOzEuMDA7MTEyLjAwOzAuMDA7MTEyLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzAuMDA7MDA7MC4wMDswLjAwXWVtYWlsQ2xpZW50ZT1OZWxzb24uTWVuZGV6QHBhbmFscGluYS5jb207Q09ESUdPSU5URVJOT1NBUD0wMDAwMDAxNTc7Q09ESUdPSU5URVJOT1NBUENMSUVOVEU9Njc5MDY4OTI7UkVGRVJFTkNFPTtIQVdCL0JMPVNBTzc1NTg4NDE=";
+		
+		boolean parseOk = txb.analyze( txtEncoded64, ob ); // use ob.addError() if any critical error during process, and return false
+		
+		if (parseOk)
+		{
+			String encoded64Result = txb.completeTxtFileWithCharges ( ob.getChargesToComplete());
+			
+			ob.setBinaryFile(encoded64Result);
+		}
+		
+		
 		
 	}
 	
-	private static String generateXMLOutput ( OutputBean ob)
+	public static String generateXMLOutput ( OutputBean ob)
 	{
-	      // TODO complete message with proper structure
-	      return "<RPSReply><OrderNumber>TESTE2EJL007C</OrderNumber><InvoiceNumber></InvoiceNumber><code>OK</code><format>TXT</format><errors/><warnings><warning>Sum of line items weight is greater than shipment gros weight</warning></warnings><binaryFile>UGFuYWxwaW5hIEVjdWFkb3IgUy5BLjtQYW5hbHBpbmEgRWN1YWRvciBTLkEuOzE3OTA3MzAxNjYwMDE7MDE7MDAxOzAwMTswMDAwMDAxNTc7QXYuIDYgZGUgRGljaWVtYnJlIE4zMi0zMTIgeSBKZWFuIEIuIEJvdXNzaW5nYXVsdCBFZGlmaWNpbyBUNiwgUGlzbyA1LCBPZmljaW5hIDUwMzswOC8wNS8yMDIwO0F2ZW5pZGEgRWwgSW5jYSwgeSBBdmVuaWRhIEFtYXpvbmFzIDQwNiwgRTQtMTgxOzA1OTA7U0k7MDQ7O0hBTExJQlVSVE9OIExBVElOIEFNRVJJQ0EgU1JMOzE3OTE4NTE2MzYwMzI7MzEyLjAwOzAuMDA7W0lUMzswMDAwOzAuMDA7MDAwMDswLjAwXVtJVDI7MjszMTIuMDA7MTI7MjQuMDBdMC4wMDszMzYuMDA7RE9MQVI7W1BBRzIwOzMzNi4wMDswO0RpYXNdO1tERVRDQ0w7MDAwO0lNUE9SVCBDVVNUT01TIENMRUFSQU5DRSBDSEFSR0VTOzEuMDA7MjAwLjAwOzAuMDA7MjAwLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzI7MTI7MjAwLjAwOzI0LjAwMDBdO1tERVRMUkZMOzAwMDtSRUlNQlVSU0VNRU5UIFdBUkVIT1VTRSBGT1JLTElGVCBBTkQgT1RIRVIgRVFVSVBNRU5UOzEuMDA7MTEyLjAwOzAuMDA7MTEyLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzAuMDA7MDA7MC4wMDswLjAwXWVtYWlsQ2xpZW50ZT1OZWxzb24uTWVuZGV6QHBhbmFscGluYS5jb207Q09ESUdPSU5URVJOT1NBUD0wMDAwMDAxNTc7Q09ESUdPSU5URVJOT1NBUENMSUVOVEU9Njc5MDY4OTI7UkVGRVJFTkNFPTtIQVdCL0JMPVNBTzc1NTg4NDE=</binaryFile></RPSReply>";
+		if ( 1 < 0)
+		{
+			ob = new OutputBean();
+			ob.setOrderNumber("TESTE2EJL007C");
+			ob.setBuyerId("67906544");
+			ob.setInvoiceNumber("123456");
+			ob.setPdf(false);
+			ob.addWarning(Warning.INVOICE_WEIGHT_EXCEEDS_SHIPMENT_WEIGHT);
+
+			ob.setBinaryFile("UGFuYWxwaW5hIEVjdWFkb3IgUy5BLjtQYW5hbHBpbmEgRWN1YWRvciBTLkEuOzE3OTA3MzAxNjYwMDE7MDE7MDAxOzAwMTswMDAwMDAxNTc7QXYuIDYgZGUgRGljaWVtYnJlIE4zMi0zMTIgeSBKZWFuIEIuIEJvdXNzaW5nYXVsdCBFZGlmaWNpbyBUNiwgUGlzbyA1LCBPZmljaW5hIDUwMzswOC8wNS8yMDIwO0F2ZW5pZGEgRWwgSW5jYSwgeSBBdmVuaWRhIEFtYXpvbmFzIDQwNiwgRTQtMTgxOzA1OTA7U0k7MDQ7O0hBTExJQlVSVE9OIExBVElOIEFNRVJJQ0EgU1JMOzE3OTE4NTE2MzYwMzI7MzEyLjAwOzAuMDA7W0lUMzswMDAwOzAuMDA7MDAwMDswLjAwXVtJVDI7MjszMTIuMDA7MTI7MjQuMDBdMC4wMDszMzYuMDA7RE9MQVI7W1BBRzIwOzMzNi4wMDswO0RpYXNdO1tERVRDQ0w7MDAwO0lNUE9SVCBDVVNUT01TIENMRUFSQU5DRSBDSEFSR0VTOzEuMDA7MjAwLjAwOzAuMDA7MjAwLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzI7MTI7MjAwLjAwOzI0LjAwMDBdO1tERVRMUkZMOzAwMDtSRUlNQlVSU0VNRU5UIFdBUkVIT1VTRSBGT1JLTElGVCBBTkQgT1RIRVIgRVFVSVBNRU5UOzEuMDA7MTEyLjAwOzAuMDA7MTEyLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzAuMDA7MDA7MC4wMDswLjAwXWVtYWlsQ2xpZW50ZT1OZWxzb24uTWVuZGV6QHBhbmFscGluYS5jb207Q09ESUdPSU5URVJOT1NBUD0wMDAwMDAxNTc7Q09ESUdPSU5URVJOT1NBUENMSUVOVEU9Njc5MDY4OTI7UkVGRVJFTkNFPTtIQVdCL0JMPVNBTzc1NTg4NDE=");
+		}
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("<RPSReply>");
+		if(!StringUtils.isNull(ob.getOrderNumber()))
+		{
+			sb.append("<OrderNumber>"+ob.getOrderNumber()+"</OrderNumber>");
+		}
+		if(!StringUtils.isNull(ob.getInvoiceNumber()))
+		{
+			sb.append("<InvoiceNumber>"+ob.getInvoiceNumber()+"</InvoiceNumber>");
+		}
+		if(!StringUtils.isNull(ob.getBuyerId()))
+		{
+			sb.append("<BuyerID>"+ob.getBuyerId()+"</BuyerID>");
+		}
+		
+		
+		if(!StringUtils.isNull(ob.getBinaryFile()))
+		{
+			sb.append("<Filename>"+ob.getFilename()+"</Filename>");
+			sb.append("<format>" + (ob.isPdf()?"PDF":"TXT") + "</format>");
+			sb.append("<code>OK</code>");
+		}
+		else
+		{
+			sb.append("<code>KO</code>");
+		}
+		
+		if (ob.getErrors()==null || ob.getErrors().size() == 0)
+		{
+			sb.append("<errors/>");
+		}
+		else
+		{
+			sb.append("<errors>");
+			for (Error error:ob.getErrors())
+			{
+				sb.append("<error>" + error.getText() + "</error>");
+			}
+			sb.append("</errors>");
+		}
+		
+		if (ob.getWarnings()==null || ob.getWarnings().size() == 0)
+		{
+			sb.append("<warnings/>");
+		}
+		else
+		{
+			sb.append("<warnings>");
+			for (Warning warning:ob.getWarnings())
+			{
+				sb.append("<warning>" + warning.getText() + "</warning>");
+			}
+			sb.append("</warnings>");
+		}
+		
+		if (!StringUtils.isNull(ob.getBinaryFile()))
+		{
+			sb.append("<binaryFile>" + ob.getBinaryFile() + "</binaryFile>");
+		}
+		sb.append("</RPSReply>");
+		
+	      return sb.toString();
 	}
 }
