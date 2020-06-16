@@ -10,6 +10,7 @@ public class OutputBean {
 
 	private String orderNumber;
 	private String invoiceNumber;
+	private String buyerId;
 	private String binaryFile;
 	private boolean pdf;
 	private List<Error> errors;
@@ -78,5 +79,8 @@ public class OutputBean {
 		getChargesToComplete().add(chargeToComplete);
 	}
 	
-	
+	public String getFilename()
+	{
+		return orderNumber + (pdf?".pdf":";txt");
+	}
 }

@@ -27,7 +27,9 @@ import org.w3c.dom.NodeList;
 import com.dsv.rps.beans.EDICharge;
 import com.dsv.rps.beans.HAWBCharge;
 import com.dsv.rps.beans.InputBean;
+import com.dsv.rps.beans.LineItem;
 import com.dsv.rps.beans.OutputBean;
+import com.dsv.rps.beans.Partner;
 import com.dsv.rps.logging.Error;
 import com.dsv.rps.logging.Warning;
 import com.dsv.rps.resources.Constants;
@@ -184,7 +186,7 @@ public class RpsProcess {
 			double invoiceweight = 0;
 			for (int i=1;i<=lineNodes.getLength();i++)
 			{
-				String lineweight = assignXMLPath(ib, ob, path, root,CW1XMLPath.LINE_GW.replace("%%%", ""+i), null);
+				String lineweight = assignXMLPath(ib, ob, path, root,CW1XMLPath.LINE_GROSS_WEIGHT.replace("%%%", ""+i), null);
 				try
 				{
 					invoiceweight = invoiceweight + Double.valueOf(lineweight);
@@ -193,6 +195,31 @@ public class RpsProcess {
 				{
 					ob.addError(Error.LINE_GW_FORMAT);
 				}
+				
+				LineItem item = new LineItem();
+				item.setCaseNumber(assignXMLPath(ib, ob, path, root,CW1XMLPath.LINE_CASE_NUMBER.replace("%%%", ""+i), null));
+				item.setItemDescription(assignXMLPath(ib, ob, path, root,CW1XMLPath.LINE_CASE_NUMBER.replace("%%%", ""+i), null));
+				item.setPartNumber(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_CASE_NUMBER.replace("%%%", ""+i), null));
+				item.setHSCode(null);
+				item.setCustomerOrderNumber(null);
+				item.setDeereOrderNumber(null);
+				item.setCountryOfOrigin(null);
+				item.setUnitPrice(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_UNIT_PRICE.replace("%%%", ""+i), null));
+				item.setQuantity(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_QUANTITY.replace("%%%", ""+i), null));
+				item.setWeight(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_GROSS_WEIGHT.replace("%%%", ""+i), null));
+				item.setValue(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_VALUE.replace("%%%", ""+i), null));
+				item.setCaseNumber(assignXMLPath(ib, ob, path, root,CW1XMLPath.LINE_CASE_NUMBER.replace("%%%", ""+i), null));
+				item.setLength(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_LENGTH.replace("%%%", ""+i), null));
+				item.setWidth(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_WIDTH.replace("%%%", ""+i), null));
+				item.setHeight(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_HEIGHT.replace("%%%", ""+i), null));
+				item.setGw(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_GROSS_WEIGHT.replace("%%%", ""+i), null));
+				item.setNetweight(assignDoubleXMLPath(ib, ob, path, root,CW1XMLPath.LINE_NET_WEIGHT.replace("%%%", ""+i), null));
+				item.setType(assignXMLPath(ib, ob, path, root,CW1XMLPath.LINE_TYPE.replace("%%%", ""+i), null));
+				
+				
+				
+				ib.addLineItem(item);
+				
 			}
 			ib.setInvoiceCW(invoiceweight);
 		}
@@ -309,7 +336,7 @@ public class RpsProcess {
 			ob.addError(Error.EDI_CHARGE);
 		}
 		
-		
+		// Legs count
 		try {
 			XPathExpression transportExpr = path.compile(CW1XMLPath.TRANSPORT_STAGE);
 			NodeList transportstageNodes = (NodeList)transportExpr.evaluate(root, XPathConstants.NODESET);
@@ -323,12 +350,62 @@ public class RpsProcess {
 		}
 		
 		
+		//Partners
+		try {
+			XPathExpression lineExpr = path.compile(CW1XMLPath.PARTNERS);
+			NodeList partnerNodes = (NodeList)lineExpr.evaluate(root, XPathConstants.NODESET);
+			for (int i=1;i<=partnerNodes.getLength();i++)
+			{
+				Partner partner = new Partner();
+				partner.setRole(assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_ROLE.replace("%%%", ""+i), null));
+				partner.setCAAD1(assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_NAME.replace("%%%", ""+i), null));
+				partner.setCAAD1A(assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_LINE1.replace("%%%", ""+i), null));
+				partner.setCAAD1B(assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_LINE2.replace("%%%", ""+i), null));
+				partner.setCAAD2(assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_CITY.replace("%%%", ""+i), null) + " " + assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_POSTCODE.replace("%%%", ""+i), null));
+				
+				String countryLine = "";
+				String country = assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_COUNTRY.replace("%%%", ""+i), null);
+				String state = assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_STATE.replace("%%%", ""+i), null);
+				String countryCode = assignXMLPath(ib, ob, path, root,CW1XMLPath.PARTNER_COUNTRYCODE.replace("%%%", ""+i), null);
+
+				if (!StringUtils.isNull(state))
+					countryLine = state + " - ";
+				if (!StringUtils.isNull(country))
+					countryLine += country;
+				else if (!StringUtils.isNull(countryCode))
+					countryLine += countryCode;
+				partner.setCAAD4(countryLine);
+				ib.addPartner(partner);
+				
+			}
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			ob.addError(Error.LINE_GW);
+		}
 		
 		
 		System.out.println(ib);
 		
 		System.out.println("INPUTBEAN IS COMPLETED WITH XML STUFF....");
 			
+	}
+	
+	private static Double assignDoubleXMLPath(InputBean ib,OutputBean ob, XPath path, Element root, String xmlpath,Error error)
+	{
+		String s = assignXMLPath(ib, ob, path, root, xmlpath, error);
+				
+		try
+		{
+			return Double.parseDouble(s);
+		}
+		catch (Exception e)
+		{
+			if (error != null)
+				ob.addError(error);
+			return null;
+		}
 	}
 	
 	private static String assignXMLPath(InputBean ib,OutputBean ob, XPath path, Element root, String xmlpath,Error error)
