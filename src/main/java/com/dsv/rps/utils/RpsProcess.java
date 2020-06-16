@@ -33,6 +33,7 @@ import com.dsv.rps.beans.OutputBean;
 import com.dsv.rps.beans.Partner;
 import com.dsv.rps.logging.Error;
 import com.dsv.rps.logging.Warning;
+import com.dsv.rps.parser.TextBuilder;
 import com.dsv.rps.resources.Constants;
 import com.microsoft.azure.servicebus.IMessage;
 
@@ -603,6 +604,19 @@ public class RpsProcess {
 			// according to Bruno, no need to handle this case (see COM SFT table, *1.1 and factor based on target country
 		}
 		
+		
+		
+		TextBuilder txb = new TextBuilder();
+		String txtEncoded64 = "UGFuYWxwaW5hIEVjdWFkb3IgUy5BLjtQYW5hbHBpbmEgRWN1YWRvciBTLkEuOzE3OTA3MzAxNjYwMDE7MDE7MDAxOzAwMTswMDAwMDAxNTc7QXYuIDYgZGUgRGljaWVtYnJlIE4zMi0zMTIgeSBKZWFuIEIuIEJvdXNzaW5nYXVsdCBFZGlmaWNpbyBUNiwgUGlzbyA1LCBPZmljaW5hIDUwMzswOC8wNS8yMDIwO0F2ZW5pZGEgRWwgSW5jYSwgeSBBdmVuaWRhIEFtYXpvbmFzIDQwNiwgRTQtMTgxOzA1OTA7U0k7MDQ7O0hBTExJQlVSVE9OIExBVElOIEFNRVJJQ0EgU1JMOzE3OTE4NTE2MzYwMzI7MzEyLjAwOzAuMDA7W0lUMzswMDAwOzAuMDA7MDAwMDswLjAwXVtJVDI7MjszMTIuMDA7MTI7MjQuMDBdMC4wMDszMzYuMDA7RE9MQVI7W1BBRzIwOzMzNi4wMDswO0RpYXNdO1tERVRDQ0w7MDAwO0lNUE9SVCBDVVNUT01TIENMRUFSQU5DRSBDSEFSR0VTOzEuMDA7MjAwLjAwOzAuMDA7MjAwLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzI7MTI7MjAwLjAwOzI0LjAwMDBdO1tERVRMUkZMOzAwMDtSRUlNQlVSU0VNRU5UIFdBUkVIT1VTRSBGT1JLTElGVCBBTkQgT1RIRVIgRVFVSVBNRU5UOzEuMDA7MTEyLjAwOzAuMDA7MTEyLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzAuMDA7MDA7MC4wMDswLjAwXWVtYWlsQ2xpZW50ZT1OZWxzb24uTWVuZGV6QHBhbmFscGluYS5jb207Q09ESUdPSU5URVJOT1NBUD0wMDAwMDAxNTc7Q09ESUdPSU5URVJOT1NBUENMSUVOVEU9Njc5MDY4OTI7UkVGRVJFTkNFPTtIQVdCL0JMPVNBTzc1NTg4NDE=";
+		
+		boolean parseOk = txb.analyze( txtEncoded64, ob ); // use ob.addError() if any critical error during process, and return false
+		
+		if (parseOk)
+		{
+			String encoded64Result = txb.completeTxtFileWithCharges ( ob.getChargesToComplete());
+			
+			ob.setBinaryFile(encoded64Result);
+		}
 		
 		
 		
