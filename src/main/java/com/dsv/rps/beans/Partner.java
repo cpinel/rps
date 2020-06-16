@@ -2,6 +2,7 @@ package com.dsv.rps.beans;
 
 public class Partner {
 
+	private String id;
 	private String role;
 	private String CAAD1;
 	private String CAAD1A;
@@ -11,6 +12,12 @@ public class Partner {
 	private String CAAD4;
 	
 	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getRole() {
 		return role;
 	}

@@ -24,6 +24,7 @@ public class CW1XMLPath {
 	public static final String LINE_TYPE =			"/RPS/ShipmentInstructionMessage/ShipmentInstruction/Orders/Order/OrderLines/Line[%%%]/NatureOfGoods";
 	
 	public static final String PARTNERS =			"/RPS/ShipmentInstructionMessage/ShipmentInstruction/ShipmentDetails/Parties/Party";
+	public static final String PARTNER_ID =			"/RPS/ShipmentInstructionMessage/ShipmentInstruction/ShipmentDetails/Parties/Party[%%%]/Id";
 	public static final String PARTNER_ROLE =		"/RPS/ShipmentInstructionMessage/ShipmentInstruction/ShipmentDetails/Parties/Party[%%%]/@Role";
 	public static final String PARTNER_NAME =		"/RPS/ShipmentInstructionMessage/ShipmentInstruction/ShipmentDetails/Parties/Party[%%%]/Address/Name";
 	public static final String PARTNER_LINE1 =		"/RPS/ShipmentInstructionMessage/ShipmentInstruction/ShipmentDetails/Parties/Party[%%%]/Address/Line1";

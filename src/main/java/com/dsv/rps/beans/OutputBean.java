@@ -19,6 +19,12 @@ public class OutputBean {
 	private List<EDICharge> chargesToComplete;
 	
 	
+	public String getBuyerId() {
+		return buyerId;
+	}
+	public void setBuyerId(String buyerId) {
+		this.buyerId = buyerId;
+	}
 	public String getOrderNumber() {
 		return orderNumber;
 	}
@@ -81,6 +87,6 @@ public class OutputBean {
 	
 	public String getFilename()
 	{
-		return orderNumber + (pdf?".pdf":";txt");
+		return orderNumber + (pdf?".pdf":".txt");
 	}
 }
