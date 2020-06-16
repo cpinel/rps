@@ -108,6 +108,7 @@ public class PdfBuilder {
 		float[] columnWidths = { 20, 10, 10, 10, 10, 8, 8, 8, 8, 8 };
 		Table table = new Table(UnitValue.createPercentArray(columnWidths));
 		table.setAutoLayout();
+		table.setWidthPercent(100);
 		// header row:
 		table.addHeaderCell(createHeaderCell("Item Description"));
 		table.addHeaderCell(createHeaderCell("Part Number"));
@@ -140,9 +141,10 @@ public class PdfBuilder {
 
 	private Table buildPackingTable(List<Packaging> packages) {
 
-		float[] columnWidths = { 20, 10, 10, 10, 15, 15, 20 };
+		float[] columnWidths = { 20, 10, 10, 10, 10, 10, 30 };
 		Table table = new Table(UnitValue.createPercentArray(columnWidths));
 		table.setAutoLayout();
+		table.setWidthPercent(100);
 		// header row:
 		table.addHeaderCell(createHeaderCell("Case Number"));
 		table.addHeaderCell(createHeaderCell("Length"));
@@ -154,12 +156,12 @@ public class PdfBuilder {
 
 		for (Packaging mypackaging : packages) {
 			table.addCell(createCell(mypackaging.getCaseNumber()));
-			table.addCell(createCell(mypackaging.getLength()));
-			table.addCell(createCell(mypackaging.getWidth()));
-			table.addCell(createCell(mypackaging.getHeight()));
+			table.addCell(createCell(mypackaging.getLength(), TextAlignment.RIGHT));
+			table.addCell(createCell(mypackaging.getWidth(), TextAlignment.RIGHT));
+			table.addCell(createCell(mypackaging.getHeight(), TextAlignment.RIGHT));
 			table.addCell(createCell(mypackaging.getGrossWeight(), TextAlignment.RIGHT));
 			table.addCell(createCell(mypackaging.getNetWeight(), TextAlignment.RIGHT));
-			table.addCell(createCell(mypackaging.getType(), TextAlignment.RIGHT));
+			table.addCell(createCell(mypackaging.getType() ));
 		}
 
 		return table;

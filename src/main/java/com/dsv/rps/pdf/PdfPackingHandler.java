@@ -80,15 +80,15 @@ public class PdfPackingHandler implements IEventHandler {
 		headerTable.setMarginLeft(30);
 	 
 		rightSide.addCell(createCell(buildParagraph("Date",invoice.getDate())));
+		rightSide.addCell(createCell(buildParagraph("Packing List No.",invoice.getInvoiceNo())));
 		 
-		String paymentTerms="";
-		for (String paymentTerm :invoice.getPaymentTerms())
-		{
-			paymentTerms+=paymentTerm+"\n" ;
-			
-		}
-		rightSide.addCell(new Cell(1,2).setBorder(Border.NO_BORDER).add(new Paragraph(paymentTerms).setFontSize(9).setHeight(60).setBorder(new SolidBorder(1))));
-		headerTable.addCell(new Cell().setBorder(Border.NO_BORDER));
+		rightSide.addCell(createCell(buildParagraph("Destination Code",invoice.getDestinationCode())));
+		rightSide.addCell(createCell(buildParagraph("Exit",invoice.getExit())));
+		rightSide.addCell(createCell(buildParagraph("Shipment Id",invoice.getShipmentId())));
+		rightSide.addCell(createCell(buildParagraph("Ship Date",invoice.getShipDate())));
+		 
+		 
+	 	headerTable.addCell(new Cell().setBorder(Border.NO_BORDER));
 		Rectangle area = new Rectangle(0, 0, 500, 500);
 		LayoutResult result = headerTable.createRendererSubTree().setParent(doc.getRenderer())
 				.layout(new LayoutContext(new LayoutArea(0, area)));
