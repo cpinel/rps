@@ -21,6 +21,15 @@ public class Invoice {
 	private List<Item> items;
 	private List<Packaging> packages;
 
+	
+	
+	private int numberOfPackages;
+	private Double grossWeight;
+	private Double netWeight;
+	private Double volume;
+	
+	
+	
 	// chargelines, for text version only
 	private List<ChargeLine> chargeLines;
 	private Map<String, Integer> chargeLinesIdx;
@@ -43,6 +52,12 @@ public class Invoice {
 
 		chargeLines = new ArrayList<ChargeLine>();
 		chargeLinesIdx = new HashMap<String, Integer>();
+		
+		numberOfPackages=0;
+		grossWeight=Double.valueOf(0);
+		netWeight=Double.valueOf(0);
+		volume=Double.valueOf(0);
+		 
 	}
 
 	// used for pdf
@@ -275,6 +290,46 @@ public class Invoice {
 
 	public void setPackaging(List<Packaging> packages) {
 		this.packages = packages;
+	}
+
+	public List<Packaging> getPackages() {
+		return packages;
+	}
+
+	public void setPackages(List<Packaging> packages) {
+		this.packages = packages;
+	}
+
+	public int getNumberOfPackages() {
+		return numberOfPackages;
+	}
+
+	public void setNumberOfPackages(int numberOfPackages) {
+		this.numberOfPackages = numberOfPackages;
+	}
+
+	public Double getGrossWeight() {
+		return grossWeight;
+	}
+
+	public void setGrossWeight(Double grossWeight) {
+		this.grossWeight = grossWeight;
+	}
+
+	public Double getNetWeight() {
+		return netWeight;
+	}
+
+	public void setNetWeight(Double netWeight) {
+		this.netWeight = netWeight;
+	}
+
+	public Double getVolume() {
+		return volume;
+	}
+
+	public void setVolume(Double volume) {
+		this.volume = volume;
 	}
 
 	public String toString() {

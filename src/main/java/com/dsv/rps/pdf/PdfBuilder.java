@@ -88,12 +88,13 @@ public class PdfBuilder {
 	}
 
 	private Table buildChargelines(List<ChargeLine> chargeLines) {
-		float[] columnWidths = { 70, 15, 15 };
+		float[] columnWidths = { 40,20, 20, 20 };
 		Table table = new Table(UnitValue.createPercentArray(columnWidths));
 		table.setAutoLayout();
 		
 		table.setWidthPercent(100);
 		for (ChargeLine charge : chargeLines) {
+			table.addCell(new Cell().add(" ").setBorder(Border.NO_BORDER));
 			table.addCell(new Cell().add(" ").setBorder(Border.NO_BORDER));
 			table.addCell(new Cell().add(charge.getText()).setBorder(Border.NO_BORDER).setFontSize(9).setBold());
 			table.addCell(new Cell().add(charge.getValue() + "").setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER).setFontSize(9).setBold());
@@ -193,6 +194,18 @@ public class PdfBuilder {
 
 			
 			Table chargelines = buildChargelines(inv.getChargeLines());
+			
+		
+			chargelines.addCell(new Cell().add(inv.getGrossWeight().toString()).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setFontSize(9).setBold());
+			chargelines.addCell(new Cell().add("GROSS KG").setBorder(Border.NO_BORDER).setFontSize(9).setBold());
+			chargelines.addCell(new Cell().add(inv.getNetWeight().toString()).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setFontSize(9).setBold());
+			chargelines.addCell(new Cell().add("NET KG").setBorder(Border.NO_BORDER).setFontSize(9).setBold());	
+			
+			chargelines.addCell(new Cell().add(inv.getNumberOfPackages()+"").setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setFontSize(9).setBold());
+			chargelines.addCell(new Cell().add("PACKAGE(S)").setBorder(Border.NO_BORDER).setFontSize(9).setBold());
+			chargelines.addCell(new Cell().add(inv.getVolume().toString()).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setFontSize(9).setBold());
+			chargelines.addCell(new Cell().add("CUBIC METER").setBorder(Border.NO_BORDER).setFontSize(9).setBold());	
+			
 			doc.add(chargelines);
 	 
 
