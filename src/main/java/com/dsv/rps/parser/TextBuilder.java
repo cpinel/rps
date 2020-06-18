@@ -1,67 +1,47 @@
 package com.dsv.rps.parser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import com.dsv.rps.bean.ChargeLine;
 import com.dsv.rps.bean.Invoice;
+import com.dsv.rps.beans.EDICharge;
+import com.dsv.rps.beans.OutputBean;
+import com.dsv.rps.logging.Error;
+import com.dsv.rps.logging.Warning;
 
 public class TextBuilder {
- 
-	private static String byteExample = "IElEICAgICAgREVFUkUgIDIwMTUwMjEyICAxMzI1IFBSTlQgIFhQQU5QUAoxU09MRCBCWTogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIENPTU1FUkNJQUwgSU5WT0lDRSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBBR0UgICAgMQogICAgREVFUkUgJiBDT01QQU5ZCiAgICBXT1JMRFdJREUgTE9HSVNUSUNTIE9QRVJBVElPTlMgICAgICAgICAgICBJTlZPSUNFIE5POiAyMDAzIDM0MDEzNCBEQVRFOiAxMEZFQjE1IERFU1RJTkFUSU9OOiAyMDIwMDNQQQogICAgMzQwMCA4MFRIIFNUUkVFVCAgICAgICAgICAgICAgICAgICAgICAgICAgREVFUkUgT1JERVIgTk86IDIwMDM3NDkwMDMgICAgICAgICBEQVRFOiAwOUZFQjE1IFRZUEU6IFNOCiAgICBNT0xJTkUgICAgICAgIElMICA2MTI2NQogICAgVU5JVEVEIFNUQVRFUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ1VTVE9NRVIgT1JERVIgTk86CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBFWElUOiBNSUxBTiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNISVAgREFURTogMTBGRUIxNQogSU5WT0lDRSBUTzogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU0hJUE1FTlQgSUQ6IDIwMDMgIFRFU1QyMDIwMDNQQUFUICAgRk9SV0FSREVSOiBYUEFOUFAKICAgIEpPSE4gREVFUkUgQlJBU0lMIExUREEKICAgIFJVQSBTRVJHSU8gRkVSTkFOREVTIEJPUkdFUyBTT0FSRVMsCiAgICBESVNUUklUTyBJTkRVU1RSSUFMICAgICAgICAgICAgICAgICAgICAgICBQQVlNRU5UIFRFUk1TOgogICAgMTMwNTQtNzA5IENBTVBJTkFTIC0gU1AgICAgICAgICAgICAgICAgICAgICAgRFVFIFRIRSBGSVJTVCBEQVkgT0YgVEhFIEZPVVJUSCBNT05USCBGT0xMT1dJTkcgVEhFCiAgICBCUkFaSUwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBNT05USCBPRiBTSElQTUVOVCBPRiBHT09EUy4KICAgIENOUEo4OS42NzQuNzgyLzAwMTMtOTEKCiBTSElQIFRPOgogICAgSk9ITiBERUVSRSBCUkFTSUwgTFREQQogICAgUlVBIFNFUkdJTyBGRVJOQU5ERVMgQk9SR0VTIFNPQVJFUywKICAgIERJU1RSSVRPIElORFVTVFJJQUwKICAgIDEzMDU0LTcwOSBDQU1QSU5BUyAtIFNQICAgIEJSQVpJTAogICAgQ05QSjg5LjY3NC43ODIvMDAxMy05MSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBBTU9VTlQgSU4gVVNECgogU0hJUFBJTkcgTUFSS1M6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEZPQiBGQUJSSUNBICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDExLjE0CgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIElOTEFORCBGUkVJR0hUICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA3LjU5CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQUlSRlJFSUdIVAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEZPUldBUkRFUiBGRUVTCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSU5TVVJBTkNFCgoKCgoKCgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIERBUCBWSVJBQ09QQVMgQUlSUE9SVCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDE4LjczCgoKCgoKCgoKCgogICAgICAgMSBQQUNLQUdFKFMpICAgICAgMTQuOTY4IEdST1NTIEtHICAgICAgICAgIC4xOTEgTkVUIEtHCiAgICAgICAxIFBBQ0tBR0UoUykgICAgICAzMy4wMDAgR1JPU1MgTEJTICAgICAgICAgLjQyMSBORVQgTEJTICAgICAgICAgICAgIENVQklDIEZFRVQKMVNPTEQgQlk6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBDT01NRVJDSUFMIElOVk9JQ0UgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBQQUdFICAgIDIKICAgIERFRVJFICYgQ09NUEFOWQogICAgV09STERXSURFIExPR0lTVElDUyBPUEVSQVRJT05TICAgICAgICAgICAgSU5WT0lDRSBOTzogMjAwMyAzNDAxMzQgREFURTogMTBGRUIxNSBERVNUSU5BVElPTjogMjAyMDAzUEEKICAgIDM0MDAgODBUSCBTVFJFRVQgICAgICAgICAgICAgICAgICAgICAgICAgIERFRVJFIE9SREVSIE5POiAyMDAzNzQ5MDAzICAgICAgICAgREFURTogMDlGRUIxNSBUWVBFOiBTTgogICAgTU9MSU5FICAgICAgICBJTCAgNjEyNjUgICAgICAgICAgICAgICAgICAgRVhJVDogTUlMQU4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBTSElQIERBVEU6IDEwRkVCMTUKICAgIFVOSVRFRCBTVEFURVMKCgogKDA1MDQgKSBHRU5FUkFMIExJQ0VOU0UgLSBOTFIKICAgICAgICAgVEhFU0UgQ09NTU9ESVRJRVMgV0VSRSBFWFBPUlRFRCBGUk9NIFRIRSBVTklURUQKICAgICAgICAgU1RBVEVTIElOIEFDQ09SREFOQ0UgV0lUSCBUSEUgRVhQT1JUIEFETUlOSVNUUkFUSU9OCiAgICAgICAgIFJFR1VMQVRJT05TLiAgRElWRVJTSU9OIENPTlRSQVJZIFRPIFUuUy4gTEFXIFBST0hJQklURUQuCgogKDA1OTEgKSBXRSBIRVJFQlkgQ0VSVElGWSBUSEFUIFRIRSBTVEFURU1FTlRTIEhFUkVJTiBBUkUgVFJVRSBBTkQKICAgICAgICAgQ09SUkVDVCBJTiBBTEwgUkVTUEVDVFMuCiAgICAgICAgIERFRVJFICYgQ09NUEFOWQoKICgwNjU4ICkgQUVTIFBPU1QgMzYyMzgyNTgwMDAgK0RPRQoKIFBBQ0tBR0UgTElTVDoKICAgICAgICAgICBDQVNFICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUEFDS0FHRSAgICAgR1JPU1MgICAgIE5FVCAgICAgICAgIERJTUVOU0lPTlMgICAgICAgIENVQklDCiAgICAgICAgICAgVFlQRSAgIFBBQ0tBR0UgREVTQ1JJUFRJT04gICAgICAgICAgIE5VTUJFUiAgICAgICBMQlMgICAgICBMQlMgICAgIExHVEggICBXRFRIICAgIEhHVCAgICBGRUVUCgogICAgICAgICAgIENUTiAgICBDQVJUT04gICAgICAgICAgICAgICAgICAgICAgICBDNTI2MzMgICAgIDMzLjAwMCAgICAgICAuNDIxICAgMjEwIFggICAxMCBYCjFTSElQUEVEIEJZOiAgICAgICAgICAgICAgICAgICAgICAgSU5WT0lDRSBOTzogMjAwMyAzNDAxMzQgREFURTogMTBGRUIxNSBERVNUSU5BVElPTjogMjAyMDAzUEEgICBQQUdFICAgIDMKICAgIERFRVJFICYgQ09NUEFOWSAgICAgICAgICAgICAgICAgICAgICBERUVSRSBPUkRFUiBOTzogMjAwMzc0OTAwMyAgREFURTogMDlGRUIxNSBUWVBFOiBTTgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIENVU1RPTUVSIE9SREVSIE5POgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNISVBNRU5UIElEOiAyMDAzICBURVNUMjAyMDAzUEFBVCAgIExJQ0VOU0UgTk86CgogICAgICAgICAgICAgICAgICAgICBDICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFAgICAgICAgICAgICAgICAgICAgICBVTklUICAgICBOICBFWFRFTkRFRCAgVgogICAgUEFSVCAgICAgUEFDS0FHRSBTICBQICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNISVAgIEsgICBPUkQgICBFWFRFTkRFRCAgICBQUklDRSAgICBFICAgUFJJQ0UgICAgQQogICBOVU1CRVIgICAgTlVNQkVSICBPICBUICAgICAgICAgREVTQ1JJUFRJT04gICAgICAgICAgIFFUWSAgIEcgICBRVFkgICAgTkVUIEtHICAgICAgVVNEICAgICBUICAgIFVTRCAgICAgVAoKIFJFNjk1ODEgICAgICBDNTI2MzMgVVMgICBUSEVSTU9TVEFUICAgICAgICAgICAgICAgICAgICAgMiAgICAgICAgMiAgICAgICAuMTkxICAgICAgNS41NyAgICAgICAgICAxMS4xNAoKIFRPVEFMUyBGT1IgT1JERVIgMjAwMzc0OTAwMyAgICAgICAgIDEgVE9UQUwgTElORSBJVEVNUyAgICAgICAgICAgICAgICAgIC4xOTEgICAgICAgICAgICAgICAgICAgIDExLjE0CgoxU0hJUFBFRCBCWTogICAgICAgICAgICAgICAgICAgICAgICAgIEVYUE9SVCBQQVJUUyBQQUNLSU5HIExJU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUEFHRSAgICA0CiAgICAgICBERUVSRSAmIENPTVBBTlkKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIElOVk9JQ0UgTk86IDIwMDMgMzQwMTM0ICAxMEZFQjE1IERFU1RJTkFUSU9OOiAyMDIwMDNQQQogSU5WT0lDRSBUTzogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRVhJVDogTUlMQU4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBTSElQIERBVEU6IDEwRkVCMTUKICAgICAgIEpPSE4gREVFUkUgQlJBU0lMIExUREEgICAgICAgICAgICAgICAgIFNISVBNRU5UIElEOiAyMDAzICBURVNUMjAyMDAzUEFBVCAgIEZPUldBUkRFUjogWFBBTlBQCiAgICAgICBSVUEgU0VSR0lPIEZFUk5BTkRFUyBCT1JHRVMgU09BUkVTLAoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIERFRVJFCiAgICBQQUNLQUdFICAgICAgUEFSVCAgICAgICAgU0hJUCAgICAgIFMgIFAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBPUkRFUiAgICAgQ1VTVE9NRVIgICAgICAgIEJJTgogICAgTlVNQkVSICAgICAgTlVNQkVSICAgICAgIFFUWSAgIEJORCBPICBEICAgICAgIERFU0NSSVBUSU9OICAgICAgICAgICAgTlVNQkVSICBPUkRFUiBOVU1CRVIgICAgTE9DQVRJT04KCiAgICBDNTI2MzMgICBSRTY5NTgxICAgICAgICAgICAgIDIgICAgIFVTICAgVEhFUk1PU1RBVCAgICAgICAgICAgICAgICAgICA0OTAwMyAgICAgICAgICAgICAgICAgRTM4N0EwMUIKCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ0FTRSAgICAgICBESU1FTlNJT05TIChNTSkgICAgICBHUk9TUyAgIE5FVCAgIENVQklDCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgVFlQRSAgIExHVEggICBXRFRIICAgSEdUICAgICAgICAgICBMQlMgIExCUyAgIEZFRVQKCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ1ROICAgICAyMTAgICAgIDEwICAgICAgICAgICAzMy4wMDAgICAgICAgLjQyMQoKCiBUT1RBTFMgRk9SIENPTU1FUkNJQUwgSU5WT0lDRSAyMDAzIDM0MDEzNCAgIExJTkUgSVRFTVMgICAgIDEgICAgICAgR1JPU1MgTEJTICAgICAgMzMuMDAwCgoKICAgICAgICAgICAgICAgICAgICAgICAgQ0FTRQogICAgICAgICAgICAgICAgIFFUWSAgICBUWVBFICAgIFBBQ0tBR0UgREVTQ1JJUFRJT04KCiAgICAgICAgICAgICAgICAgICAgMSAgICBDVE4gICAgIENBUlRPTgo=";
 	private static Logger logger = Logger.getLogger(TextBuilder.class.getName());
-	
-	private List<String> lines = new ArrayList<String>(); 
+	public static final String TEXT_EXAMPLE = "IElEICAgICAgREVFUkUgIDIwMTUwMjEyICAxMzI1IFBSTlQgIFhQQU5QUAoxU09MRCBCWTogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIENPTU1FUkNJQUwgSU5WT0lDRSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBBR0UgICAgMQogICAgREVFUkUgJiBDT01QQU5ZCiAgICBXT1JMRFdJREUgTE9HSVNUSUNTIE9QRVJBVElPTlMgICAgICAgICAgICBJTlZPSUNFIE5POiAyMDAzIDM0MDEzNCBEQVRFOiAxMEZFQjE1IERFU1RJTkFUSU9OOiAyMDIwMDNQQQogICAgMzQwMCA4MFRIIFNUUkVFVCAgICAgICAgICAgICAgICAgICAgICAgICAgREVFUkUgT1JERVIgTk86IDIwMDM3NDkwMDMgICAgICAgICBEQVRFOiAwOUZFQjE1IFRZUEU6IFNOCiAgICBNT0xJTkUgICAgICAgIElMICA2MTI2NQogICAgVU5JVEVEIFNUQVRFUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ1VTVE9NRVIgT1JERVIgTk86CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBFWElUOiBNSUxBTiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNISVAgREFURTogMTBGRUIxNQogSU5WT0lDRSBUTzogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU0hJUE1FTlQgSUQ6IDIwMDMgIFRFU1QyMDIwMDNQQUFUICAgRk9SV0FSREVSOiBYUEFOUFAKICAgIEpPSE4gREVFUkUgQlJBU0lMIExUREEKICAgIFJVQSBTRVJHSU8gRkVSTkFOREVTIEJPUkdFUyBTT0FSRVMsCiAgICBESVNUUklUTyBJTkRVU1RSSUFMICAgICAgICAgICAgICAgICAgICAgICBQQVlNRU5UIFRFUk1TOgogICAgMTMwNTQtNzA5IENBTVBJTkFTIC0gU1AgICAgICAgICAgICAgICAgICAgICAgRFVFIFRIRSBGSVJTVCBEQVkgT0YgVEhFIEZPVVJUSCBNT05USCBGT0xMT1dJTkcgVEhFCiAgICBCUkFaSUwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBNT05USCBPRiBTSElQTUVOVCBPRiBHT09EUy4KICAgIENOUEo4OS42NzQuNzgyLzAwMTMtOTEKCiBTSElQIFRPOgogICAgSk9ITiBERUVSRSBCUkFTSUwgTFREQQogICAgUlVBIFNFUkdJTyBGRVJOQU5ERVMgQk9SR0VTIFNPQVJFUywKICAgIERJU1RSSVRPIElORFVTVFJJQUwKICAgIDEzMDU0LTcwOSBDQU1QSU5BUyAtIFNQICAgIEJSQVpJTAogICAgQ05QSjg5LjY3NC43ODIvMDAxMy05MSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBBTU9VTlQgSU4gVVNECgogU0hJUFBJTkcgTUFSS1M6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEZPQiBGQUJSSUNBICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDExLjE0CgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIElOTEFORCBGUkVJR0hUICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA3LjU5CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQUlSRlJFSUdIVAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEZPUldBUkRFUiBGRUVTCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSU5TVVJBTkNFCgoKCgoKCgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIERBUCBWSVJBQ09QQVMgQUlSUE9SVCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDE4LjczCgoKCgoKCgoKCgogICAgICAgMSBQQUNLQUdFKFMpICAgICAgMTQuOTY4IEdST1NTIEtHICAgICAgICAgIC4xOTEgTkVUIEtHCiAgICAgICAxIFBBQ0tBR0UoUykgICAgICAzMy4wMDAgR1JPU1MgTEJTICAgICAgICAgLjQyMSBORVQgTEJTICAgICAgICAgICAgIENVQklDIEZFRVQKMVNPTEQgQlk6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBDT01NRVJDSUFMIElOVk9JQ0UgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBQQUdFICAgIDIKICAgIERFRVJFICYgQ09NUEFOWQogICAgV09STERXSURFIExPR0lTVElDUyBPUEVSQVRJT05TICAgICAgICAgICAgSU5WT0lDRSBOTzogMjAwMyAzNDAxMzQgREFURTogMTBGRUIxNSBERVNUSU5BVElPTjogMjAyMDAzUEEKICAgIDM0MDAgODBUSCBTVFJFRVQgICAgICAgICAgICAgICAgICAgICAgICAgIERFRVJFIE9SREVSIE5POiAyMDAzNzQ5MDAzICAgICAgICAgREFURTogMDlGRUIxNSBUWVBFOiBTTgogICAgTU9MSU5FICAgICAgICBJTCAgNjEyNjUgICAgICAgICAgICAgICAgICAgRVhJVDogTUlMQU4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBTSElQIERBVEU6IDEwRkVCMTUKICAgIFVOSVRFRCBTVEFURVMKCgogKDA1MDQgKSBHRU5FUkFMIExJQ0VOU0UgLSBOTFIKICAgICAgICAgVEhFU0UgQ09NTU9ESVRJRVMgV0VSRSBFWFBPUlRFRCBGUk9NIFRIRSBVTklURUQKICAgICAgICAgU1RBVEVTIElOIEFDQ09SREFOQ0UgV0lUSCBUSEUgRVhQT1JUIEFETUlOSVNUUkFUSU9OCiAgICAgICAgIFJFR1VMQVRJT05TLiAgRElWRVJTSU9OIENPTlRSQVJZIFRPIFUuUy4gTEFXIFBST0hJQklURUQuCgogKDA1OTEgKSBXRSBIRVJFQlkgQ0VSVElGWSBUSEFUIFRIRSBTVEFURU1FTlRTIEhFUkVJTiBBUkUgVFJVRSBBTkQKICAgICAgICAgQ09SUkVDVCBJTiBBTEwgUkVTUEVDVFMuCiAgICAgICAgIERFRVJFICYgQ09NUEFOWQoKICgwNjU4ICkgQUVTIFBPU1QgMzYyMzgyNTgwMDAgK0RPRQoKIFBBQ0tBR0UgTElTVDoKICAgICAgICAgICBDQVNFICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUEFDS0FHRSAgICAgR1JPU1MgICAgIE5FVCAgICAgICAgIERJTUVOU0lPTlMgICAgICAgIENVQklDCiAgICAgICAgICAgVFlQRSAgIFBBQ0tBR0UgREVTQ1JJUFRJT04gICAgICAgICAgIE5VTUJFUiAgICAgICBMQlMgICAgICBMQlMgICAgIExHVEggICBXRFRIICAgIEhHVCAgICBGRUVUCgogICAgICAgICAgIENUTiAgICBDQVJUT04gICAgICAgICAgICAgICAgICAgICAgICBDNTI2MzMgICAgIDMzLjAwMCAgICAgICAuNDIxICAgMjEwIFggICAxMCBYCjFTSElQUEVEIEJZOiAgICAgICAgICAgICAgICAgICAgICAgSU5WT0lDRSBOTzogMjAwMyAzNDAxMzQgREFURTogMTBGRUIxNSBERVNUSU5BVElPTjogMjAyMDAzUEEgICBQQUdFICAgIDMKICAgIERFRVJFICYgQ09NUEFOWSAgICAgICAgICAgICAgICAgICAgICBERUVSRSBPUkRFUiBOTzogMjAwMzc0OTAwMyAgREFURTogMDlGRUIxNSBUWVBFOiBTTgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIENVU1RPTUVSIE9SREVSIE5POgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNISVBNRU5UIElEOiAyMDAzICBURVNUMjAyMDAzUEFBVCAgIExJQ0VOU0UgTk86CgogICAgICAgICAgICAgICAgICAgICBDICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFAgICAgICAgICAgICAgICAgICAgICBVTklUICAgICBOICBFWFRFTkRFRCAgVgogICAgUEFSVCAgICAgUEFDS0FHRSBTICBQICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNISVAgIEsgICBPUkQgICBFWFRFTkRFRCAgICBQUklDRSAgICBFICAgUFJJQ0UgICAgQQogICBOVU1CRVIgICAgTlVNQkVSICBPICBUICAgICAgICAgREVTQ1JJUFRJT04gICAgICAgICAgIFFUWSAgIEcgICBRVFkgICAgTkVUIEtHICAgICAgVVNEICAgICBUICAgIFVTRCAgICAgVAoKIFJFNjk1ODEgICAgICBDNTI2MzMgVVMgICBUSEVSTU9TVEFUICAgICAgICAgICAgICAgICAgICAgMiAgICAgICAgMiAgICAgICAuMTkxICAgICAgNS41NyAgICAgICAgICAxMS4xNAoKIFRPVEFMUyBGT1IgT1JERVIgMjAwMzc0OTAwMyAgICAgICAgIDEgVE9UQUwgTElORSBJVEVNUyAgICAgICAgICAgICAgICAgIC4xOTEgICAgICAgICAgICAgICAgICAgIDExLjE0CgoxU0hJUFBFRCBCWTogICAgICAgICAgICAgICAgICAgICAgICAgIEVYUE9SVCBQQVJUUyBQQUNLSU5HIExJU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgUEFHRSAgICA0CiAgICAgICBERUVSRSAmIENPTVBBTlkKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIElOVk9JQ0UgTk86IDIwMDMgMzQwMTM0ICAxMEZFQjE1IERFU1RJTkFUSU9OOiAyMDIwMDNQQQogSU5WT0lDRSBUTzogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRVhJVDogTUlMQU4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBTSElQIERBVEU6IDEwRkVCMTUKICAgICAgIEpPSE4gREVFUkUgQlJBU0lMIExUREEgICAgICAgICAgICAgICAgIFNISVBNRU5UIElEOiAyMDAzICBURVNUMjAyMDAzUEFBVCAgIEZPUldBUkRFUjogWFBBTlBQCiAgICAgICBSVUEgU0VSR0lPIEZFUk5BTkRFUyBCT1JHRVMgU09BUkVTLAoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIERFRVJFCiAgICBQQUNLQUdFICAgICAgUEFSVCAgICAgICAgU0hJUCAgICAgIFMgIFAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBPUkRFUiAgICAgQ1VTVE9NRVIgICAgICAgIEJJTgogICAgTlVNQkVSICAgICAgTlVNQkVSICAgICAgIFFUWSAgIEJORCBPICBEICAgICAgIERFU0NSSVBUSU9OICAgICAgICAgICAgTlVNQkVSICBPUkRFUiBOVU1CRVIgICAgTE9DQVRJT04KCiAgICBDNTI2MzMgICBSRTY5NTgxICAgICAgICAgICAgIDIgICAgIFVTICAgVEhFUk1PU1RBVCAgICAgICAgICAgICAgICAgICA0OTAwMyAgICAgICAgICAgICAgICAgRTM4N0EwMUIKCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ0FTRSAgICAgICBESU1FTlNJT05TIChNTSkgICAgICBHUk9TUyAgIE5FVCAgIENVQklDCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgVFlQRSAgIExHVEggICBXRFRIICAgSEdUICAgICAgICAgICBMQlMgIExCUyAgIEZFRVQKCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ1ROICAgICAyMTAgICAgIDEwICAgICAgICAgICAzMy4wMDAgICAgICAgLjQyMQoKCiBUT1RBTFMgRk9SIENPTU1FUkNJQUwgSU5WT0lDRSAyMDAzIDM0MDEzNCAgIExJTkUgSVRFTVMgICAgIDEgICAgICAgR1JPU1MgTEJTICAgICAgMzMuMDAwCgoKICAgICAgICAgICAgICAgICAgICAgICAgQ0FTRQogICAgICAgICAgICAgICAgIFFUWSAgICBUWVBFICAgIFBBQ0tBR0UgREVTQ1JJUFRJT04KCiAgICAgICAgICAgICAgICAgICAgMSAgICBDVE4gICAgIENBUlRPTgo=";
+	public static final String TEXT_EXAMPLE2 = "UGFuYWxwaW5hIEVjdWFkb3IgUy5BLjtQYW5hbHBpbmEgRWN1YWRvciBTLkEuOzE3OTA3MzAxNjYwMDE7MDE7MDAxOzAwMTswMDAwMDAxNTc7QXYuIDYgZGUgRGljaWVtYnJlIE4zMi0zMTIgeSBKZWFuIEIuIEJvdXNzaW5nYXVsdCBFZGlmaWNpbyBUNiwgUGlzbyA1LCBPZmljaW5hIDUwMzswOC8wNS8yMDIwO0F2ZW5pZGEgRWwgSW5jYSwgeSBBdmVuaWRhIEFtYXpvbmFzIDQwNiwgRTQtMTgxOzA1OTA7U0k7MDQ7O0hBTExJQlVSVE9OIExBVElOIEFNRVJJQ0EgU1JMOzE3OTE4NTE2MzYwMzI7MzEyLjAwOzAuMDA7W0lUMzswMDAwOzAuMDA7MDAwMDswLjAwXVtJVDI7MjszMTIuMDA7MTI7MjQuMDBdMC4wMDszMzYuMDA7RE9MQVI7W1BBRzIwOzMzNi4wMDswO0RpYXNdO1tERVRDQ0w7MDAwO0lNUE9SVCBDVVNUT01TIENMRUFSQU5DRSBDSEFSR0VTOzEuMDA7MjAwLjAwOzAuMDA7MjAwLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzI7MTI7MjAwLjAwOzI0LjAwMDBdO1tERVRMUkZMOzAwMDtSRUlNQlVSU0VNRU5UIFdBUkVIT1VTRSBGT1JLTElGVCBBTkQgT1RIRVIgRVFVSVBNRU5UOzEuMDA7MTEyLjAwOzAuMDA7MTEyLjAwOzs7REVUXVtJRDM7MC4wMDswLjAwOzAuMDA7MC4wMF1bSUQyOzAuMDA7MDA7MC4wMDswLjAwXWVtYWlsQ2xpZW50ZT1OZWxzb24uTWVuZGV6QHBhbmFscGluYS5jb207Q09ESUdPSU5URVJOT1NBUD0wMDAwMDAxNTc7Q09ESUdPSU5URVJOT1NBUENMSUVOVEU9Njc5MDY4OTI7UkVGRVJFTkNFPTtIQVdCL0JMPVNBTzc1NTg4NDE=";
+
+	// rawlines
+	private List<String> lines = new ArrayList<String>();
 
 	private Invoice invoice = new Invoice();
 
-	 
-
-	public List<String> getLines() {
-		return lines;
-	}
-
-	public void setLines(List<String> lines) {
-		this.lines = lines;
-	}
-
 	public TextBuilder() {
 
-		try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("rps.properties");) {
+	}
 
-			// conf.load(inputStream);
+	public TextBuilder(byte[] inputdata) {
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// constructor, decode and parse lines
+		boolean success = this.parseContent(decodeFile64(inputdata));
+		// header info
+		this.extractHeaderInfo();
+		// detect chargelines
+		this.extractChargeLines();
+	}
 
-		finally {
-			try {
-				// inputStream.close();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
+	public TextBuilder(String inputdata) {
+
+		// this(inputdata.getBytes());
 
 	}
 
@@ -73,48 +53,8 @@ public class TextBuilder {
 		this.invoice = invoice;
 	}
 
-	public String listFilesForFolder(final File folder) {
-
-		for (final File fileEntry : folder.listFiles()) {
-			if (fileEntry.isDirectory()) {
-				listFilesForFolder(fileEntry);
-			} else {
-				if (fileEntry.getAbsolutePath().contains(".txt"))
-					return fileEntry.getAbsolutePath();
-
-			}
-		}
-		return "";
-
-	}
-
-	private String readFile(String filePath) {
-		StringBuilder contentBuilder = new StringBuilder();
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(filePath));
-			String sCurrentLine;
-			int i = 0;
-			while ((sCurrentLine = br.readLine()) != null) {
-				contentBuilder.append(sCurrentLine).append("\n");
-				lines.add(sCurrentLine);
-			 
-				i++;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null)
-				try {
-					br.close();
-				} catch (IOException ex) {
-				}
-
-		}
-		return contentBuilder.toString();
-	}
-
-	private byte[] encodeFile64(byte[] bytes) {
+	// encode textfile base64
+	public static byte[] encodeFile64(byte[] bytes) {
 
 		try {
 			byte[] bytesEncoded;
@@ -131,7 +71,8 @@ public class TextBuilder {
 		return null;
 	}
 
-	private String decodeFile64(byte[] bytes) {
+//decode textfile base 64
+	public static String decodeFile64(byte[] bytes) {
 
 		try {
 
@@ -147,40 +88,73 @@ public class TextBuilder {
 		return null;
 	}
 
-	private static Document getDocument(String fileName) throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setNamespaceAware(false);
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document doc = builder.parse(fileName);
-		return doc;
-	}
+	public boolean analyze(String decodefile, OutputBean ob) {
 
-	private static List<String> evaluateXPath(Document document, String xpathExpression) throws Exception {
-		// Create XPathFactory object
-		XPathFactory xpathFactory = XPathFactory.newInstance();
-
-		// Create XPath object
-		XPath xpath = xpathFactory.newXPath();
-
-		List<String> values = new ArrayList<String>();
-		try {
-			// Create XPathExpression object
-			XPathExpression expr = xpath.compile(xpathExpression);
-
-			// Evaluate expression result on XML document
-			NodeList nodes = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
-
-			for (int i = 0; i < nodes.getLength(); i++) {
-				values.add(nodes.item(i).getNodeValue());
-			}
-
-		} catch (XPathExpressionException e) {
-			e.printStackTrace();
+		// constructor, decode and parse lines
+		boolean success = this.parseContent(decodeFile64(decodefile.getBytes()));
+		if (!success) {
+			ob.addError(Error.EDI_CHARGE);
+			return false;
 		}
-		return values;
+		// header info
+		this.extractHeaderInfo();
+
+		// detect chargelines in text
+		this.extractChargeLines();
+		if (this.getInvoice().getChargeLines().size() == 0) {
+			// just wwarning even if no match
+			ob.addWarning(Warning.NO_CHARGES);
+
+		}
+		return true;
 	}
 
-	public void extractHeaderInfo()
+	public String completeTxtFileWithCharges(OutputBean ob) {
+		boolean match = false;
+		List<EDICharge> charges = ob.getChargesToComplete();
+		for (EDICharge edicharge : charges)
+
+		{// get id from text of edicharge
+			boolean success = this.updateChargeLine(edicharge.getText(), edicharge.getUpdatedValue().floatValue());
+			if (success)
+				match = true;
+
+		}
+
+		if (match == false)
+			ob.addWarning(Warning.NO_CHARGES);
+		// rebuild anyway
+		try {
+			return new String(this.rebuild());
+		} catch (Exception ex) {
+			ob.addError(Error.EDI_CHARGE_CURR);
+		}
+
+		return "";
+
+	}
+
+	// split lines
+	private boolean parseContent(String decodefile) {
+
+		try {
+
+			String[] splitted = decodefile.split("\\r?\\n");
+			for (String element : splitted) {
+
+				lines.add(element);
+
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	// main methods to manipulate text files
+
+	private void extractHeaderInfo()
 
 	{
 		try {
@@ -239,12 +213,12 @@ public class TextBuilder {
 		System.out.println("[INVOICE]" + invoice.toString());
 	}
 
-	public void extractChargeLines() {
+	private void extractChargeLines() {
 		// SHIPPING MARKS:
 		int lineIndex = 0, beginIndex = 0;
 		boolean firstchargeDetected = false;
 		int idx = 0;
-		for (String line : getLines()) {
+		for (String line : lines) {
 
 			if (line.contains("SHIPPING MARKS:")) {
 				{
@@ -272,26 +246,24 @@ public class TextBuilder {
 		}
 
 	}
-// split lines
-	public void parseContent(String decodefile) {
-		int i = 0;
-		String[] splitted = decodefile.split("\\r?\\n");
-		for (String element : splitted) {
 
-			lines.add(element);
-	 
-			i++;
+	public boolean updateChargeLine(String textIdentifier, float value) {
 
-		}
+		Integer lineIndex = invoice.getChargeLinesIdx().get(textIdentifier);
+		if (lineIndex == null)
+			return false;
+		ChargeLine airFreightCharge = invoice.getChargeLines().get(lineIndex.intValue());
+		airFreightCharge.setValue(value);
+		return true;
 
 	}
 
-	public void reCalculateAndReConstructChargeLines() {
-		
-		
+	protected void reCalculateChargeLines() {
+
+		// rebuild all chargelines, total is calculated on last charge line
+
 		float total = 0;
- 
-		
+
 		// read all except last
 		for (int i = 0; i < this.getInvoice().getChargeLines().size() - 1; i++) {
 
@@ -302,71 +274,86 @@ public class TextBuilder {
 			// sum for total on last charge line
 			total += chargeline.getValue();
 			int id = chargeline.getLineIndex();
-			List<String> mylist = this.getLines();
-			mylist.set(id, chargeline.getRawLine());
+
+			lines.set(id, chargeline.getRawLine());
 
 		}
 
-		ChargeLine lastchargeline = this.getInvoice().getChargeLines().get(this.getInvoice().getChargeLines().size() - 1);
+		// total calculated here
+
+		ChargeLine lastchargeline = this.getInvoice().getChargeLines()
+				.get(this.getInvoice().getChargeLines().size() - 1);
 		lastchargeline.setValue(total);
 		lastchargeline.reconstructRawLine();
 		int id = lastchargeline.getLineIndex();
-		List<String> mylist = this.getLines();
-		mylist.set(id, lastchargeline.getRawLine());
+		// replace reconstructed line in table
+		lines.set(id, lastchargeline.getRawLine());
 	}
 
+	// recalculate and reconstruct charge lines,with new amounts
+	protected byte[] rebuild() {
+
+		reCalculateChargeLines();
+		StringBuilder sb = new StringBuilder();
+		for (String line : this.lines) {
+
+			sb.append(line+"\n");
+
+		}
+		byte[] res = sb.toString().getBytes();
+		logger.info(sb.toString());
+		return  encodeFile64(res);
+	}
+public static void display(String encoded)
+{
+	try {
+		String decoded=decodeFile64(encoded.getBytes());
+		String[] splitted = decoded.split("\\r?\\n");
+		for (String element : splitted) {
+
+			logger.info(element);
+
+		}}
+catch (Exception e) {
+	// TODO: handle exception
+} 
+ 
+
+}
 	public static void main(String[] args) {
 
-		TextBuilder textBuilder = new TextBuilder();
-	 
+		// construct from a byte[] ,extract is launched from constructor
+
+		OutputBean ob = new OutputBean();
+		ob.setOrderNumber("TESTE2EJL007C");
+		ob.setBuyerId("67906544");
+		ob.setInvoiceNumber("123456");
+		ob.setPdf(false);
+		ob.addChargeToComplete(new EDICharge("I132", "AIRFREIGHT", 100.00));
+		ob.addChargeToComplete(new EDICharge("I400", "FORWARDER FEES", 500.00));
+		// update one charge line
+
+		TextBuilder txb = new TextBuilder();
+
+		boolean parseOk = txb.analyze(TEXT_EXAMPLE, ob); // use ob.addError() if any critical error during process, and
+															// return false
+
+		if (parseOk) {
+			String encoded64Result = txb.completeTxtFileWithCharges(ob);
+
+		 display(encoded64Result);
+			
+			
+			ob.setBinaryFile(encoded64Result);
+		}
+		
+		
+	    
+		
 
 		Path currentRelativePath = Paths.get("");
 		String s = currentRelativePath.toAbsolutePath().toString();
 		System.out.println("Current relative path is: " + s);
 
-		String decodefile = textBuilder.decodeFile64(TextBuilder.byteExample.getBytes());
-		textBuilder.parseContent(decodefile);
-
-		// init line
-
-	 
-
-		textBuilder.extractHeaderInfo();
-		try {
-			// this method extracts the charges , with line index , text and eventually
-			// amount, value will be set by 0
-			textBuilder.extractChargeLines();
-			// once we get the charges this part is reconstructing the text file with the
-			// values from the charge lines
-
-			/// lookup for AIRFREIGHT and inject test
-
-			Integer lineIndex = textBuilder.getInvoice().getChargeLinesIdx().get("AIRFREIGHT");
-			ChargeLine airFreightCharge = textBuilder.getInvoice().getChargeLines().get(lineIndex.intValue());
-			airFreightCharge.setValue(new Float(34));
-
-			logger.info("ENTER AIRFREIGHT:" + lineIndex);
-			/// lookup for FORWARDER FEES and inject test
-			Integer lineIndex2 = textBuilder.getInvoice().getChargeLinesIdx().get("FORWARDER FEES");
-			ChargeLine forwarderCharge = textBuilder.getInvoice().getChargeLines().get(lineIndex2.intValue());
-			forwarderCharge.setValue(new Float(77));
-
-			logger.info("ENTER FORWARDER FEES:" + lineIndex2);
-
-			textBuilder.reCalculateAndReConstructChargeLines();
-
-			for (String line : textBuilder.getLines()) {
-
-				logger.info(line);
-
-			}
-
-			logger.info(textBuilder.getInvoice().toString());
-			// String xmlfile = readFile("c:/temp/HWAYBL_I-AHR.xml");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
 	}
-
 }
