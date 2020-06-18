@@ -2,6 +2,8 @@ package com.dsv.rps.logging;
 
 public enum Error {
 
+	TXT_DECODE("Can't decode and parse text file "),
+	
 	UNREADABLE_XML("Message sent by CW1 cannot is not formatted properly"),
 	NO_TXT_IN_XML("No Binary file available in the XML document"),
 	XMLPARSER_ISSUE("XML Parser not configured properly"),
@@ -27,6 +29,9 @@ public enum Error {
 	NO_OTHER_CHARGE("No Other Charge could be found in the file"),
 	
 	NO_TRANSPORT_STAGE("No transport stage could be found in the file"),
+	
+	BUILD_ERROR("Error rebuilding text ")
+	
 	;
 	
 	
