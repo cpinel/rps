@@ -17,7 +17,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 
-		<junit.version>3.8.1</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<commons-beanutils.version>1.8.3</commons-beanutils.version>
 		<commons-chain.version>1.2</commons-chain.version>
 		<commons-codec.version>1.5</commons-codec.version>
